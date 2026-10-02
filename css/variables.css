@@ -1,5 +1,0 @@
-/* Variables: colores, alto del carrusel y tema claro/oscuro. Edita aquí la paleta. */
-:root{--ink:#16324a;--ink2:#4a6177;--bg:#f6f8fa;--card:#fff;--line:#d9e1e8;--accent:#e0861a;--accent-ink:#fff;--hero-h:500px;--r:10px;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6eef5;--ink2:#9fb3c4;--bg:#0f1b26;--card:#172736;--line:#2a3d4f}}
-:root[data-theme="dark"]{--ink:#e6eef5;--ink2:#9fb3c4;--bg:#0f1b26;--card:#172736;--line:#2a3d4f}
