@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Modelo de página</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+<body>
+<header><div class="wrap"><nav aria-label="Principal">
+<span class="logo">[Nombre de la empresa]</span>
+<button id="burger" aria-label="Abrir menú" aria-expanded="false">☰</button>
+<ul id="menu">
+<li><a href="#home" data-v="home" class="on">Home</a></li>
+<li><a href="#nosotros" data-v="nosotros">Nosotros</a></li>
+<li><a href="#servicios" data-v="servicios">Servicios y productos</a></li>
+<li><a href="#" id="openAdmin" class="sm">⚙ Admin</a></li>
+</ul></nav></div></header>
+
+<main>
+<section id="home" class="view" style="padding:0">
+<div class="hero" id="hero" aria-roledescription="carrusel" aria-label="Destacados">
+<div id="slides"></div>
+<button class="arrow" id="prev" aria-label="Anterior">‹</button>
+<button class="arrow" id="next" aria-label="Siguiente">›</button>
+<div class="dots" id="dots"></div>
+</div>
+<div class="wrap" style="padding-top:48px;padding-bottom:56px">
+<p style="color:var(--ink2);max-width:620px;margin-top:0">Conoce lo que ofrecemos. Para contratar un servicio o pedir un producto, usa el formulario.</p>
+<div id="svcList"></div>
+<p style="margin-top:28px"><a class="btn" href="#servicios">Hacer una solicitud</a></p>
+</div>
+</section>
+
+<section id="nosotros" class="view" style="padding-top:0">
+<div class="static" id="abTop"></div>
+<div class="wrap" style="padding-top:48px">
+<h2>Nuestros valores</h2>
+<div class="grid" id="values"></div>
+<div class="story" style="margin-top:56px">
+<h2>Nuestra historia</h2>
+<p>Aquí va el texto del origen de la empresa: cómo empezó, quiénes la fundaron y qué problema querían resolver.</p>
+<p>Un segundo párrafo para contar la trayectoria, los logros y hacia dónde va la empresa.</p>
+</div></div>
+<div class="static" id="abBottom" style="margin-top:40px"></div>
+</section>
+
+<section id="servicios" class="view">
+<div class="wrap">
+<h2>Solicitar un servicio o producto</h2>
+<p style="color:var(--ink2);max-width:620px">Elige lo que necesitas y cuéntanos los detalles. Te responderemos con una propuesta.</p>
+
+<form id="form" novalidate>
+<div class="f"><label for="nombre">Nombre completo *</label><input id="nombre" name="nombre" autocomplete="name"><span class="err"></span></div>
+<div class="f"><label for="email">Correo electrónico *</label><input id="email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
+<div class="f"><label for="tel">Teléfono *</label><input id="tel" name="tel" type="tel" autocomplete="tel"><span class="err"></span></div>
+<div class="f"><label for="empresa">Empresa (opcional)</label><input id="empresa" name="empresa"><span class="err"></span></div>
+<div class="f"><label for="servicio">Servicio o producto *</label><select id="servicio" name="servicio"></select><span class="err"></span></div>
+<div class="f"><label for="plazo">Prioridad / plazo</label><select id="plazo"><option>Sin prisa</option><option>Este mes</option><option>Esta semana</option><option>Urgente</option></select><span class="err"></span></div>
+<div class="f"><label for="cant">Cantidad (opcional)</label><input id="cant" type="number" min="1"><span class="err"></span></div>
+<div class="f full"><label for="desc">Describe lo que necesitas *</label><textarea id="desc" rows="4"></textarea><span class="err"></span></div>
+<div class="f full"><label style="font-weight:400"><input type="checkbox" id="terms" style="width:auto"> Acepto los términos y la política de privacidad *</label><span class="err"></span></div>
+<div class="f full"><button class="btn" type="submit" id="send">Enviar solicitud</button></div>
+</form>
+<div class="ok" id="ok" role="status">¡Solicitud enviada! Te contactaremos pronto.</div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 [Nombre de la empresa]. Todos los derechos reservados.</span><span>contacto@ejemplo.com · +00 000 000 0000</span></div></footer>
+
+<dialog id="admin" aria-label="Panel de administración">
+<div class="ah"><strong>Panel de administración</strong><button class="btn alt sm" id="closeAdmin">Cerrar</button></div>
+<div id="login" class="ab">
+<p class="hint">Modelo: PIN de ejemplo <b>1234</b>. En la versión real se reemplaza por usuario y contraseña en un servidor.</p>
+<div class="f" style="max-width:260px"><label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric"><span class="err" id="pinErr"></span></div>
+<button class="btn" id="pinGo" style="margin-top:8px">Entrar</button>
+</div>
+<div id="panel" hidden>
+<div class="tabs" id="tabs">
+<button data-t="car" class="on">Carrusel</button><button data-t="svc">Servicios y productos</button><button data-t="abt">Imágenes de Nosotros</button>
+</div>
+<div class="ab" id="tabBody"></div>
+</div>
+</dialog>
+
+<script defer src="js/store.js"></script>
+<script defer src="js/carousel.js"></script>
+<script defer src="js/render.js"></script>
+<script defer src="js/nav.js"></script>
+<script defer src="js/form.js"></script>
+<script defer src="js/admin.js"></script>
+<script defer src="js/main.js"></script>
+</body>
+</html>
