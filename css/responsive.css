@@ -1,0 +1,10 @@
+/* Adaptación a móvil y preferencias de movimiento. */
+@media(max-width:700px){
+:root{--hero-h:300px}
+#burger{display:block}
+nav ul{display:none;position:absolute;top:calc(64px + env(safe-area-inset-top,0px));left:0;right:0;background:var(--card);border-bottom:1px solid var(--line);flex-direction:column;padding:10px 20px}
+nav ul.open{display:flex}
+form{grid-template-columns:1fr}
+.row{grid-template-columns:1fr}.row img{width:100%;height:auto;aspect-ratio:16/10}
+}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}html{scroll-behavior:auto}}
