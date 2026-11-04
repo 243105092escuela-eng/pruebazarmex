@@ -1,0 +1,27 @@
+/* Variables: paleta clara estilo papelería / escolar */
+:root {
+  --ink: #1e293b;         /* Texto principal oscuro para alta legibilidad */
+  --ink2: #475569;        /* Texto secundario */
+  --bg: #f8fafc;          /* Fondo general claro, fresco y limpio */
+  --card: #ffffff;        /* Tarjetas y contenedores blancos */
+  --line: #e2e8f0;        /* Líneas y bordes suaves */
+  --accent: #e0861a;      /* Color de acento (botones/destacados) */
+  --accent-ink: #ffffff;  /* Texto sobre botones */
+  --hero-h: 500px;
+  --r: 10px;
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Evita que el modo oscuro del sistema operativo ensucie u oscurezca el diseño */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="dark-override"]) {
+    --ink: #1e293b;
+    --ink2: #475569;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --line: #e2e8f0;
+  }
+}

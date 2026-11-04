@@ -1,0 +1,71 @@
+# =====================================================================
+#  Zarmex · .htaccess raíz (Apache 2.4)
+# =====================================================================
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+AddDefaultCharset UTF-8
+
+# --- HTTPS (opcional): descomenta cuando tu hosting tenga certificado SSL ---
+#<IfModule mod_rewrite.c>
+#  RewriteEngine On
+#  RewriteCond %{HTTPS} !=on
+#  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+#  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#</IfModule>
+
+# --- Bloqueo de carpetas internas y archivos sensibles ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(includes|database|cache|logs)(/|$) - [F,L]
+</IfModule>
+<FilesMatch "^\.(env|git|zarmex)|\.(sql|md|log|ini|sh|bak|dist|example)$|^config\.local\.php$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# --- Cabeceras de seguridad para estáticos (las páginas PHP añaden la CSP) ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- Compresión gzip ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# --- Caché de estáticos (los CSS/JS llevan ?v=fecha, así que es seguro cachear mucho) ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                 "access plus 1 year"
+  ExpiresByType application/javascript   "access plus 1 year"
+  ExpiresByType text/javascript          "access plus 1 year"
+  ExpiresByType image/jpeg               "access plus 1 year"
+  ExpiresByType image/png                "access plus 1 year"
+  ExpiresByType image/webp               "access plus 1 year"
+  ExpiresByType image/svg+xml            "access plus 1 month"
+  ExpiresByType image/x-icon             "access plus 1 month"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|jpe?g|png|webp)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# --- Límites de subida (mod_php; con PHP-FPM/CGI se usa .user.ini) ---
+<IfModule mod_php.c>
+  php_value upload_max_filesize 4M
+  php_value post_max_size 8M
+  php_flag  display_errors off
+</IfModule>
+<IfModule mod_php8.c>
+  php_value upload_max_filesize 4M
+  php_value post_max_size 8M
+  php_flag  display_errors off
+</IfModule>

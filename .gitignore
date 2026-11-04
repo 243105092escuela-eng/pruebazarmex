@@ -1,0 +1,13 @@
+.env
+.zarmex.env
+config.local.php
+logs/*
+!logs/.gitkeep
+!logs/.htaccess
+cache/*
+!cache/.gitkeep
+!cache/.htaccess
+uploads/*/*
+!uploads/*/.gitkeep
+.DS_Store
+Thumbs.db

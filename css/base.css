@@ -1,0 +1,289 @@
+
+/* =========================================================
+   BASE: RESET, TIPOGRAFÍA, UTILIDADES Y CONTROL DE IMÁGENES
+   ========================================================= */
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+/* Imágenes generales */
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-position: center;
+}
+
+picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Tipografía */
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+    margin: 0 0 .5em;
+}
+
+h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+/* Contenedor principal */
+.wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Espaciado general de las secciones */
+section {
+    padding: 56px 0;
+}
+
+/* Vistas */
+.view {
+    display: none;
+    min-height: calc(100vh - 64px);
+}
+
+.view.on {
+    display: block;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    border: 0;
+    border-radius: var(--r);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font: 600 1rem inherit;
+    font-family: inherit;
+    padding: 12px 22px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn.alt {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+}
+
+.btn:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+/* Accesibilidad */
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   HOME: ELIMINAR ESPACIOS VERTICALES INNECESARIOS
+   ========================================================= */
+
+#home.view-home {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* =========================================================
+   CARRUSEL PRINCIPAL
+   Ocupa el espacio disponible debajo del header.
+   Se asume un header de 80px en escritorio y 64px en móvil.
+   ========================================================= */
+
+:root {
+    --header-height: 80px;
+}
+
+#home .hero {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    height: calc(100svh - var(--header-height));
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--card);
+}
+
+/* Contenedor de las diapositivas */
+#home .hero #slides {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Cada diapositiva ocupa el carrusel completo */
+#home .hero #slides > * {
+    width: 100%;
+    height: 100%;
+}
+
+/* Imágenes del carrusel */
+#home .hero #slides img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Imágenes dentro de picture */
+#home .hero #slides picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Controles del carrusel */
+#home .hero .arrow,
+#home .hero .dots {
+    z-index: 2;
+}
+
+/* =========================================================
+   IMÁGENES ESTÁTICAS Y SERVICIOS
+   ========================================================= */
+
+.static img,
+#svcList img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* Contenedores de imágenes estáticas */
+.static {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* =========================================================
+   TARJETAS DE PRODUCTOS
+   ========================================================= */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+    background-color: #fff;
+}
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+
+.muted {
+    color: var(--ink2);
+}
+
+.lead {
+    color: var(--ink2);
+    max-width: 620px;
+}
+
+.lead.flush {
+    margin-top: 0;
+}
+
+.cta {
+    margin-top: 28px;
+}
+
+.pt48 {
+    padding-top: 48px;
+}
+
+.mt40 {
+    margin-top: 40px;
+}
+
+.mt56 {
+    margin-top: 56px;
+}
+
+.hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* =========================================================
+   RESPONSIVE: TABLET Y MÓVIL
+   ========================================================= */
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 64px;
+    }
+
+    .view {
+        min-height: calc(100vh - var(--header-height));
+    }
+
+    #home .hero {
+        height: calc(100vh - var(--header-height));
+        height: calc(100svh - var(--header-height));
+    }
+
+    section {
+        padding: 36px 0;
+    }
+
+    #home.view-home {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
