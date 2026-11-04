@@ -260,9 +260,12 @@ section {
     height: 100%;
 }
 
+/* Proporción fija 16:10: las imágenes de 800 x 500 px encajan exactas;
+   otras proporciones se muestran completas con franjas blancas. */
 .card img {
     width: 100%;
-    height: 200px;
+    height: auto;
+    aspect-ratio: 16 / 10;
     object-fit: contain;
     object-position: center;
     background-color: #fff;
