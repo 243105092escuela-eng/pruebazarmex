@@ -199,6 +199,52 @@ section {
 }
 
 /* =========================================================
+   NOSOTROS: IMÁGENES SUPERIOR E INFERIOR
+   La superior mide lo mismo que el carrusel de Home. La
+   inferior, junto con el header y el footer, ocupa justo una
+   pantalla: al llegar al final se ven imagen y footer completos.
+   --footer-height es aproximada (padding 28px x 2 + una línea
+   de texto); si el footer crece, ajústala aquí.
+   ========================================================= */
+
+:root {
+    --footer-height: 80px;
+}
+
+/* La imagen inferior queda pegada al footer */
+#nosotros.view-about {
+    padding-bottom: 0;
+}
+
+#nosotros #abTop {
+    height: calc(100vh - var(--header-height));
+    height: calc(100svh - var(--header-height));
+}
+
+/* 64px = altura real del header fijo (igual que el padding de main) */
+#nosotros #abBottom {
+    height: calc(
+        100vh - 64px - env(safe-area-inset-top, 0px) - var(--footer-height)
+    );
+    height: calc(
+        100svh - 64px - env(safe-area-inset-top, 0px) - var(--footer-height)
+    );
+}
+
+#nosotros .static picture,
+#nosotros .static img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+}
+
+#nosotros .static img {
+    object-fit: cover;
+    object-position: center;
+}
+
+/* =========================================================
    TARJETAS DE PRODUCTOS
    ========================================================= */
 
@@ -271,6 +317,8 @@ section {
 @media (max-width: 768px) {
     :root {
         --header-height: 64px;
+        /* En móvil el footer suele partirse en dos líneas */
+        --footer-height: 116px;
     }
 
     .view {
