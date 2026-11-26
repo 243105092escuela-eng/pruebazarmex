@@ -7,6 +7,7 @@
     --line: #e2e8f0; /* Líneas y bordes suaves */
     --accent: #e0861a; /* Color de acento (botones/destacados) */
     --accent-ink: #ffffff; /* Texto sobre botones */
+    --slide-cap-bg: #1e293b; /* Fondo del texto del carrusel en pantallas verticales */
     --hero-h: 500px;
     --r: 10px;
 

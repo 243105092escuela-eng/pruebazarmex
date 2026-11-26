@@ -5,6 +5,15 @@
     }
     #burger {
         display: block;
+        flex: none;
+    }
+    .logo {
+        font-size: 1.05rem;
+        padding-left: 0;
+    }
+    .logo img {
+        height: 34px;
+        max-width: 120px;
     }
     nav ul {
         display: none;

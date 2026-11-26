@@ -116,11 +116,14 @@ section {
 /* =========================================================
    CARRUSEL PRINCIPAL
    Ocupa el espacio disponible debajo del header.
-   Se asume un header de 80px en escritorio y 64px en móvil.
+   --header-height = altura real del header fijo (nav de 64px
+   + zona segura de pantallas con notch), igual que el padding
+   de main en layout.css.
+   En pantallas verticales cambia: ver el final de este archivo.
    ========================================================= */
 
 :root {
-    --header-height: 80px;
+    --header-height: calc(64px + env(safe-area-inset-top, 0px));
 }
 
 #home .hero {
@@ -221,14 +224,9 @@ section {
     height: calc(100svh - var(--header-height));
 }
 
-/* 64px = altura real del header fijo (igual que el padding de main) */
 #nosotros #abBottom {
-    height: calc(
-        100vh - 64px - env(safe-area-inset-top, 0px) - var(--footer-height)
-    );
-    height: calc(
-        100svh - 64px - env(safe-area-inset-top, 0px) - var(--footer-height)
-    );
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+    height: calc(100svh - var(--header-height) - var(--footer-height));
 }
 
 #nosotros .static picture,
@@ -319,7 +317,6 @@ section {
 
 @media (max-width: 768px) {
     :root {
-        --header-height: 64px;
         /* En móvil el footer suele partirse en dos líneas */
         --footer-height: 116px;
     }
@@ -340,5 +337,71 @@ section {
     #home.view-home {
         padding-top: 0;
         padding-bottom: 0;
+    }
+}
+
+/* =========================================================
+   PANTALLAS VERTICALES (CELULAR Y TABLET)
+   En vertical, una imagen horizontal a pantalla completa se
+   recorta mucho. Aquí el carrusel y las imágenes de Nosotros
+   muestran la imagen completa (su proporción real) y el texto
+   del slide pasa debajo de la imagen, con flechas y puntos en
+   una fila al pie.
+   ========================================================= */
+
+@media (orientation: portrait) and (max-width: 1024px) {
+    #home .hero {
+        height: auto;
+        display: block;
+        background-color: var(--slide-cap-bg);
+    }
+
+    /* Los slides se apilan en la misma celda (en vez de position: absolute)
+       para que el carrusel tome la altura del slide más alto */
+    #home .hero #slides {
+        position: relative;
+        inset: auto;
+        display: grid;
+    }
+
+    #home .hero #slides > * {
+        grid-area: 1 / 1;
+        position: relative;
+        height: auto;
+    }
+
+    #home .hero #slides picture,
+    #home .hero #slides img {
+        height: auto;
+    }
+
+    #home .hero .cap {
+        position: static;
+        background: var(--slide-cap-bg);
+        padding: 20px 0 64px;
+    }
+
+    #home .hero .cap p {
+        margin-bottom: 12px;
+    }
+
+    /* Flechas abajo, a los lados de los puntos */
+    #home .hero .arrow {
+        top: auto;
+        bottom: 8px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+    }
+
+    #home .hero .dots {
+        bottom: 22px;
+    }
+
+    #nosotros #abTop,
+    #nosotros #abBottom,
+    #nosotros .static picture,
+    #nosotros .static img {
+        height: auto;
     }
 }

@@ -22,6 +22,19 @@ nav {
     gap: 10px;
     font-weight: 800;
     font-size: 1.2rem;
+    min-width: 0;
+}
+/* El picture del logo toma el ancho de su imagen (no el 100 % de base.css) */
+.logo picture {
+    flex: none;
+    width: auto;
+    height: auto;
+}
+/* El nombre va en una sola línea; si no cabe, termina en "…" */
+.logo span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .logo img {
     height: 40px;
