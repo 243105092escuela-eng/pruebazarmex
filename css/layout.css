@@ -1,5 +1,9 @@
-/* Estructura: navegación, vistas y footer. */
-/* nav */
+/* Estructura: encabezado, navegación, banda de llamada a la acción y footer. */
+
+/* =========================================================
+   ENCABEZADO Y NAVEGACIÓN
+   ========================================================= */
+
 header {
     position: fixed;
     top: 0;
@@ -7,98 +11,267 @@ header {
     right: 0;
     z-index: 20;
     background: var(--card);
-    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
     padding-top: env(safe-area-inset-top, 0px);
+    transition:
+        box-shadow 0.3s,
+        border-color 0.3s;
 }
+
+/* Al bajar se marca la sombra (clase que pone app.js) */
+header.scrolled {
+    box-shadow: var(--shadow);
+    border-color: var(--line);
+}
+
 nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: var(--hh);
+    gap: 16px;
 }
+
+.navr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Logo: imagen (si hay) + nombre; sin imagen, la inicial en un cuadro */
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 800;
-    font-size: 1.2rem;
+    color: var(--ink);
+    text-decoration: none;
+    font: 800 1.15rem/1.1 var(--font-h);
     min-width: 0;
 }
+
 /* El picture del logo toma el ancho de su imagen (no el 100 % de base.css) */
 .logo picture {
     flex: none;
     width: auto;
     height: auto;
 }
-/* El nombre va en una sola línea; si no cabe, termina en "…" */
-.logo span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+
 .logo img {
     height: 40px;
     width: auto;
     max-width: 160px;
     object-fit: contain;
 }
+
+.logo .mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+:root[data-theme="dark"] .logo .mark {
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+/* El nombre va en una sola línea; si no cabe, termina en "…" */
+.logo .lname {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Menú */
 nav ul {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     list-style: none;
     margin: 0;
     padding: 0;
     align-items: center;
 }
-nav a {
+
+nav ul a {
+    position: relative;
+    display: block;
     color: var(--ink);
     text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
+    padding: 9px 14px;
+    border-radius: 10px;
     font-weight: 600;
+    font-size: 0.97rem;
+    transition:
+        color 0.2s,
+        background 0.2s;
 }
-nav a.on {
+
+/* Subrayado animado en los enlaces normales */
+nav ul a:not(.cta)::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+}
+
+nav ul a:not(.cta):hover::after,
+nav ul a.on:not(.cta)::after {
+    transform: scaleX(1);
+}
+
+nav ul a.on {
+    color: var(--accent);
+}
+
+/* "Solicitar servicio" va como botón */
+nav ul a.cta {
+    background: var(--accent);
+    color: var(--accent-ink);
+    margin-left: 6px;
+}
+
+nav ul a.cta:hover,
+nav ul a.cta.on {
+    background: var(--accent2);
+    color: var(--accent-ink);
+}
+
+#burger {
+    display: none;
+}
+
+/* Botón de tema: luna en claro, sol en oscuro */
+#themeBtn span {
+    display: block;
+    line-height: 0;
+}
+
+#themeBtn .sun {
+    display: none;
+}
+
+:root[data-theme="dark"] #themeBtn .sun {
+    display: block;
+}
+
+:root[data-theme="dark"] #themeBtn .moon {
+    display: none;
+}
+
+main {
+    padding-top: calc(var(--hh) + env(safe-area-inset-top, 0px));
+}
+
+/* =========================================================
+   BANDA DE LLAMADA A LA ACCIÓN
+   ========================================================= */
+
+.band {
+    background: linear-gradient(120deg, var(--navy), var(--navy2));
+    color: #fff;
+    padding: 64px 0;
+}
+
+.band-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.band h2 {
+    margin-bottom: 6px;
+}
+
+.band p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background: var(--navy2);
+    color: rgba(255, 255, 255, 0.75);
+    padding: 64px 0 24px;
+    font-size: 0.95rem;
+}
+
+.fgrid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.2fr;
+    gap: 40px;
+}
+
+footer h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 14px;
+}
+
+footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    word-break: break-word;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+
+footer .flogo {
+    display: inline-flex;
+    max-width: 100%;
+    color: #fff;
+    margin-bottom: 14px;
+}
+
+footer .flogo .mark {
     background: var(--accent);
     color: var(--accent-ink);
 }
-#burger {
-    display: none;
-    background: none;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: var(--ink);
-    font-size: 1.1rem;
-    cursor: pointer;
+
+footer .flogo img {
+    height: 48px;
 }
-main {
-    padding-top: calc(64px + env(safe-area-inset-top, 0px));
+
+footer p {
+    margin: 0;
+    max-width: 380px;
 }
-footer {
-    background: var(--card);
-    border-top: 1px solid var(--line);
-    padding: 28px 0;
-    color: var(--ink2);
-    font-size: 0.9rem;
-}
-footer a {
-    color: inherit;
-}
-footer .wrap {
+
+.fbot {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
-    align-items: center;
-}
-/* vistas */
-.view-home {
-    padding: 0;
-}
-.view-about {
-    padding-top: 0;
-}
-.home-body {
-    padding-top: 48px;
-    padding-bottom: 56px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    margin-top: 44px;
+    padding-top: 20px;
+    font-size: 0.85rem;
 }

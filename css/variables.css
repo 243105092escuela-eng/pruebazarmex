@@ -1,28 +1,46 @@
-/* Variables: paleta clara estilo papelería / escolar */
+/* Variables: colores, tipografías, alturas y tema claro/oscuro. Edita aquí la paleta.
+   El color de acento también se puede cambiar desde el panel (Ajustes del sitio → css/tema.php). */
 :root {
-    --ink: #1e293b; /* Texto principal oscuro para alta legibilidad */
-    --ink2: #475569; /* Texto secundario */
-    --bg: #f8fafc; /* Fondo general claro, fresco y limpio */
-    --card: #ffffff; /* Tarjetas y contenedores blancos */
-    --line: #e2e8f0; /* Líneas y bordes suaves */
+    --navy: #16324a; /* Azul de la marca: banda de llamada a la acción, panel de contacto */
+    --navy2: #0f2436; /* Azul más oscuro: footer y fondos de imágenes */
+    --ink: #16324a; /* Texto principal */
+    --ink2: #51677c; /* Texto secundario */
+    --bg: #ffffff; /* Fondo general */
+    --soft: #eef4f9; /* Fondo de las secciones alternas */
+    --card: #ffffff; /* Tarjetas y contenedores */
+    --line: #dde6ee; /* Líneas y bordes suaves */
     --accent: #e0861a; /* Color de acento (botones/destacados) */
+    --accent2: #c8730f; /* Acento al pasar el cursor */
     --accent-ink: #ffffff; /* Texto sobre botones */
-    --slide-cap-bg: #1e293b; /* Fondo del texto del carrusel en pantallas verticales */
-    --hero-h: 500px;
-    --r: 10px;
+    --accent-soft: rgba(224, 134, 26, 0.12); /* Fondo suave de los íconos */
+    --slide-cap-bg: #0f2436; /* Fondo del texto del carrusel en pantallas verticales */
+    --hero-h: min(80vh, 640px); /* Alto del carrusel */
+    --hh: 72px; /* Alto de la barra de navegación (64px en móvil) */
+    --r: 14px;
+    --shadow: 0 10px 30px rgba(22, 50, 74, 0.08);
+    --shadow2: 0 18px 40px rgba(22, 50, 74, 0.16);
+    --font: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    --font-h: "Poppins", "Segoe UI", system-ui, sans-serif;
+    color-scheme: light;
 
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Evita que el modo oscuro del sistema operativo ensucie u oscurezca el diseño */
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme="dark-override"]) {
-        --ink: #1e293b;
-        --ink2: #475569;
-        --bg: #f8fafc;
-        --card: #ffffff;
-        --line: #e2e8f0;
-    }
+/* Modo oscuro del sitio público. Solo se activa con data-theme="dark", que pone
+   js/tema-inicial.js (según la elección del visitante o, la primera vez, el sistema).
+   El panel de administración no lo usa: siempre se ve en claro. */
+:root[data-theme="dark"] {
+    --ink: #e6eef5;
+    --ink2: #9fb3c4;
+    --bg: #0f1b26;
+    --soft: #132331;
+    --card: #172736;
+    --line: #2a3d4f;
+    --navy2: #0a141d;
+    --slide-cap-bg: #0a141d;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow2: 0 18px 40px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
 }

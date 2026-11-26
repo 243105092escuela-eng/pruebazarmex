@@ -61,6 +61,12 @@ En el **primer ingreso el sistema obliga a cambiar la contraseña** (mínimo 10 
 Nosotros (sin parpadeo). `js/app.js` carga el resto con **una sola petición** a `api/content.php` (con `ETag`: si no hay
 cambios responde `304`). Mantiene carrusel, menú hamburguesa, vistas por hash y tarjetas agrupadas.
 
+**Diseño.** Tipografías Inter (texto) y Poppins (títulos) servidas desde `fonts/` (licencia OFL, sin Google Fonts),
+encabezado con modo claro/oscuro y acceso al panel, secciones con antetítulo, banda «¿Listo para empezar?» y footer en
+columnas. El modo oscuro solo afecta al sitio público: `js/tema-inicial.js` (en `<head>`, antes de los CSS para que no
+parpadee) aplica la elección guardada del visitante o, si nunca eligió, la del sistema; el panel siempre se ve en claro.
+El botón «Solicitar» de cada tarjeta abre el formulario con ese servicio ya elegido.
+
 **Formulario.** Validación en cliente y en servidor, token CSRF, campo trampa anti-spam (honeypot) y límite de 5 envíos
 por IP por hora. Se guarda en `solicitudes`; el select se llena desde la BD.
 
@@ -79,7 +85,8 @@ Al reemplazar o eliminar se borran los archivos anteriores.
 (no consultan la BD). Si borras el archivo, se regenera solo.
 
 **Colores.** En *Ajustes* puedes activar un color de acento propio; se aplica mediante `css/tema.php`
-(una hoja de estilos externa, sin estilos en línea). Si no lo activas se usa la paleta original.
+(una hoja de estilos externa, sin estilos en línea), que también calcula el tono para el cursor (`--accent2`) y el
+fondo suave de los íconos (`--accent-soft`). Si no lo activas se usa la paleta de `css/variables.css`.
 
 ---
 
@@ -159,7 +166,11 @@ errores sin detalles en producción (log en `logs/php-error.log`) · el CSV expo
 `css/components.css` (se **eliminó** todo el CSS del admin embebido; `picture`, `.grp`, `.price`, `.check`, estados de `.ok`) ·
 `css/responsive.css` (se quitaron las reglas del admin viejo).
 
-**Sin cambios:** `css/variables.css` (paleta y tema claro/oscuro).
+**Rediseño posterior** (estilo del sitio estático `pruebazarmex`): se reescribieron `css/variables.css`, `base.css`,
+`layout.css`, `components.css` y `responsive.css`, `index.php`, `includes/render.php` y partes de `js/app.js`; se
+añadieron `js/tema-inicial.js` y `fonts/`. Del rediseño estático **no** se trajeron las secciones que necesitarían
+tablas nuevas en la BD y pantallas nuevas en el panel: cifras, «¿Por qué elegirnos?», misión/visión, testimonios,
+preguntas frecuentes, redes sociales, botón de WhatsApp y secciones extra.
 
 **Eliminado:** el diálogo de admin embebido, el PIN `1234`, el enlace «⚙ Admin», `localStorage` y las imágenes en base64.
 

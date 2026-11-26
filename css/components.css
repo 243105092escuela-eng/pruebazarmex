@@ -1,69 +1,180 @@
-/* Componentes: carrusel, tarjetas y formulario. (El panel de administración vive en admin.css.) */
-/* carousel */
+/* Componentes: carrusel, tarjetas, Nosotros, formulario y contacto.
+   (El panel de administración vive en admin.css.) */
+
+/* =========================================================
+   CARRUSEL
+   En pantallas verticales cambia: ver el final de responsive.css.
+   ========================================================= */
+
 .hero {
     position: relative;
     height: var(--hero-h);
+    min-height: 420px;
     overflow: hidden;
-    background: #000;
+    background: var(--navy2);
     touch-action: pan-y;
 }
+
 .slide {
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 0.6s;
+    visibility: hidden;
+    transition:
+        opacity 0.9s,
+        visibility 0.9s;
 }
+
 .slide.on {
     opacity: 1;
+    visibility: visible;
     z-index: 1;
 }
-.slide picture,
-.static picture {
-    height: 100%;
+
+.slide picture {
+    overflow: hidden;
 }
-.slide img,
-.static img {
+
+.slide img {
     width: 100%;
+    max-width: none;
     height: 100%;
     object-fit: cover;
+    transform: scale(1.08);
 }
+
+/* Acercamiento lento de la imagen activa */
+.slide.on img {
+    animation: kb 7s ease-out forwards;
+}
+
+@keyframes kb {
+    from {
+        transform: scale(1.08);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Texto del slide sobre un degradado a la izquierda */
 .cap {
     position: absolute;
-    inset: auto 0 0 0;
-    padding: 60px 20px 56px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+    inset: 0;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(
+        90deg,
+        rgba(10, 24, 38, 0.85) 0%,
+        rgba(10, 24, 38, 0.55) 50%,
+        rgba(10, 24, 38, 0.15) 100%
+    );
     color: #fff;
 }
-.cap h1 {
-    font-size: clamp(1.6rem, 4vw, 2.8rem);
+
+.cap .wrap {
+    width: 100%;
 }
-.cap p {
+
+.cap-in {
+    max-width: 620px;
+}
+
+.cap .h1 {
+    font: 800 clamp(2rem, 5vw, 3.5rem)/1.1 var(--font-h);
     margin: 0 0 16px;
-    max-width: 560px;
+    letter-spacing: -0.02em;
 }
+
+.cap p {
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    margin: 0 0 28px;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* El texto entra en escalera al cambiar de slide */
+.slide.on .cap-in > * {
+    animation: up 0.8s both;
+}
+
+.slide.on .cap-in > *:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+.slide.on .cap-in > *:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+@keyframes up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 3;
-    width: 44px;
-    height: 44px;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
     border-radius: 50%;
-    border: 0;
-    background: rgba(255, 255, 255, 0.85);
-    color: #16324a;
-    font-size: 1.3rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
     cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
 }
+
+.arrow:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.arrow svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.arrow[hidden],
+.dots[hidden] {
+    display: none;
+}
+
 #prev {
-    left: 12px;
+    left: 18px;
 }
+
 #next {
-    right: 12px;
+    right: 18px;
 }
+
 .dots {
     position: absolute;
-    bottom: 16px;
+    bottom: 40px;
     left: 0;
     right: 0;
     z-index: 3;
@@ -71,100 +182,368 @@
     justify-content: center;
     gap: 8px;
 }
+
 .dots button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    background: transparent;
+    width: 10px;
+    height: 10px;
+    border-radius: 99px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.5);
     padding: 0;
     cursor: pointer;
+    transition:
+        width 0.3s,
+        background 0.3s;
 }
+
 .dots button.on {
-    background: #fff;
+    width: 30px;
+    background: var(--accent);
 }
-/* nosotros */
-.static {
-    height: var(--hero-h);
-    overflow: hidden;
-}
+
+/* =========================================================
+   REJILLAS Y TARJETAS
+   ========================================================= */
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 18px;
+    gap: 22px;
 }
+
+.g3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.gauto {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
 .card {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--r);
-    padding: 22px;
+    padding: 26px;
+    transition:
+        transform 0.3s,
+        box-shadow 0.3s,
+        border-color 0.3s;
 }
-.val svg {
-    width: 40px;
-    height: 40px;
-    stroke: var(--accent);
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow2);
+    border-color: transparent;
+}
+
+/* Ícono en un cuadro suave del color de acento */
+.ico {
+    display: inline-grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 16px;
+    transition:
+        background 0.3s,
+        color 0.3s;
+}
+
+.ico svg {
+    width: 28px;
+    height: 28px;
     fill: none;
+    stroke: currentColor;
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
-    margin-bottom: 10px;
 }
-.val p,
-.svc p {
+
+.val p {
     margin: 0;
     color: var(--ink2);
 }
-.grp {
-    margin: 0 0 16px;
+
+.val:hover .ico {
+    background: var(--accent);
+    color: var(--accent-ink);
 }
-.grp:not(:first-child) {
-    margin-top: 40px;
-}
-.story {
-    max-width: 720px;
-}
-.story p {
-    color: var(--ink2);
-}
-/* servicios */
+
+/* =========================================================
+   SERVICIOS Y PRODUCTOS
+   ========================================================= */
+
 .svc {
     padding: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
-.svc img {
+
+/* Proporción fija 16:10: las imágenes de 800 x 500 px encajan exactas;
+   otras proporciones se muestran completas con franjas blancas. */
+.svc .im {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: #fff;
+}
+
+.svc .im img {
     width: 100%;
-    aspect-ratio: 16/10;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.6s;
+}
+
+/* El marcador generado (sin imagen subida) sí llena la tarjeta */
+.svc .im img[src^="data:"] {
     object-fit: cover;
 }
-.svc div {
-    padding: 18px;
+
+.svc:hover .im img {
+    transform: scale(1.07);
 }
-.svc p.price {
-    margin-top: 8px;
+
+/* Etiqueta "Servicio" / "Producto" sobre la imagen */
+.badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--navy);
+    color: #fff;
+    font: 600 0.75rem/1 var(--font);
+    letter-spacing: 0.04em;
+    padding: 7px 11px;
+    border-radius: 99px;
+}
+
+.badge.prod {
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.svc .bd {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.svc .bd p {
+    color: var(--ink2);
+    margin: 0 0 16px;
+}
+
+.svc .ft {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.price {
+    font: 700 1.1rem var(--font-h);
     color: var(--ink);
 }
+
+.svc .btn {
+    padding: 9px 16px;
+    font-size: 0.92rem;
+}
+
+/* Título de grupo con línea hasta el borde */
+.gtitle {
+    font-size: 1.3rem;
+    margin: 44px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gtitle:first-child {
+    margin-top: 0;
+}
+
+.gtitle::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
+/* =========================================================
+   NOSOTROS
+   ========================================================= */
+
+/* Imagen superior con el título encima */
+.pagehead {
+    position: relative;
+    height: clamp(260px, 42vh, 400px);
+    overflow: hidden;
+    background: var(--navy2);
+}
+
+.pagehead img {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pagehead .ov {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(0deg, rgba(10, 24, 38, 0.85), rgba(10, 24, 38, 0.25));
+    color: #fff;
+    padding-bottom: 48px;
+}
+
+.pagehead .ov .wrap {
+    width: 100%;
+}
+
+.pagehead h1 {
+    font: 800 clamp(2.2rem, 5vw, 3.4rem)/1.1 var(--font-h);
+    margin: 0;
+}
+
+/* Historia (texto) junto a la imagen inferior */
+.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.split.solo {
+    grid-template-columns: 1fr;
+}
+
+.story p {
+    color: var(--ink2);
+}
+
+.split-img img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--r);
+    box-shadow: var(--shadow2);
+}
+
+/* =========================================================
+   FORMULARIO Y CONTACTO
+   ========================================================= */
+
+.contact {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.contact.solo {
+    grid-template-columns: 1fr;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+/* Panel azul con los datos de contacto */
+.info {
+    background: linear-gradient(160deg, var(--navy), var(--navy2));
+    color: #fff;
+    border-radius: var(--r);
+    padding: 32px;
+    position: sticky;
+    top: calc(var(--hh) + 20px);
+}
+
+.info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+}
+
+.info > p {
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 24px;
+}
+
+.info ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+}
+
+.info li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.info li .ico {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    margin: 0;
+    flex: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+}
+
+.info li .ico svg {
+    width: 20px;
+    height: 20px;
+}
+
+.info small {
+    display: block;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+}
+
+.info a {
+    color: #fff;
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.info a:hover {
+    color: var(--accent);
+}
+
 form {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--r);
-    padding: 24px;
-    margin-top: 24px;
+    padding: 32px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 18px;
+    box-shadow: var(--shadow);
 }
+
 .f {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
+
 .f.full {
     grid-column: 1/-1;
 }
+
 label {
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
 }
+
 input,
 select,
 textarea {
@@ -172,32 +551,63 @@ textarea {
     color: var(--ink);
     background: var(--bg);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 10px 12px;
+    border-radius: 10px;
+    padding: 11px 14px;
     width: 100%;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
 }
-.err {
-    color: #c0392b;
-    font-size: 0.85rem;
-    min-height: 1.1em;
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
 }
+
 .check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
     font-weight: 400;
 }
+
 .check input {
-    width: auto;
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    accent-color: var(--accent);
+    flex: none;
 }
+
+.err {
+    color: #d9443a;
+    font-size: 0.84rem;
+    min-height: 1.1em;
+}
+
+#send {
+    width: 100%;
+    padding: 15px;
+}
+
+/* Aviso después de enviar (app.js añade .show y, si hubo error, .ko) */
 .ok {
     background: #e3f6e8;
     color: #14532d;
-    border-radius: 8px;
-    padding: 12px 16px;
+    border-radius: 10px;
+    padding: 14px 18px;
     margin-top: 16px;
     display: none;
+    font-weight: 600;
 }
+
 .ok.show {
     display: block;
 }
+
 .ok.ko {
     background: #fdecea;
     color: #7a1f13;

@@ -1,43 +1,196 @@
-/* Adaptación a móvil y preferencias de movimiento. */
-@media (max-width: 700px) {
+/* Adaptación a tablet, móvil, pantallas verticales y preferencias de movimiento. */
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 960px) {
+    .g3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .split {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .contact {
+        grid-template-columns: 1fr;
+    }
+
+    .info {
+        position: static;
+    }
+
+    .fgrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .fgrid > div:first-child {
+        grid-column: 1/-1;
+    }
+}
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 760px) {
     :root {
-        --hero-h: 300px;
+        --hh: 64px;
+        --hero-h: 72vh;
     }
+
+    .sec {
+        padding: 64px 0;
+    }
+
+    .navr {
+        gap: 8px;
+    }
+
     #burger {
-        display: block;
-        flex: none;
+        display: inline-grid;
     }
+
     .logo {
         font-size: 1.05rem;
-        padding-left: 0;
     }
+
     .logo img {
         height: 34px;
         max-width: 120px;
     }
+
+    /* El menú se despliega debajo de la barra */
     nav ul {
         display: none;
         position: absolute;
-        top: calc(64px + env(safe-area-inset-top, 0px));
+        top: calc(var(--hh) + env(safe-area-inset-top, 0px));
         left: 0;
         right: 0;
         background: var(--card);
         border-bottom: 1px solid var(--line);
+        box-shadow: var(--shadow);
         flex-direction: column;
-        padding: 10px 20px;
+        align-items: stretch;
+        padding: 12px 22px 18px;
     }
+
     nav ul.open {
         display: flex;
     }
+
+    nav ul a.cta {
+        margin: 8px 0 0;
+        text-align: center;
+    }
+
+    .arrow {
+        display: none;
+    }
+
+    .g3 {
+        grid-template-columns: 1fr;
+    }
+
     form {
+        grid-template-columns: 1fr;
+        padding: 22px;
+    }
+
+    .fgrid {
         grid-template-columns: 1fr;
     }
 }
-@media (prefers-reduced-motion: reduce) {
-    .slide {
-        transition: none;
+
+/* En pantallas muy angostas se oculta el nombre junto al logo si hay imagen */
+@media (max-width: 380px) {
+    .logo picture + .lname {
+        display: none;
     }
+}
+
+/* =========================================================
+   PANTALLAS VERTICALES (CELULAR Y TABLET)
+   En vertical, una imagen horizontal a pantalla completa se
+   recorta mucho. Aquí el carrusel muestra la imagen completa
+   (su proporción real) y el texto del slide pasa debajo de la
+   imagen, con flechas y puntos en una fila al pie.
+   ========================================================= */
+
+@media (orientation: portrait) and (max-width: 1024px) {
+    .hero {
+        height: auto;
+        min-height: 0;
+        background-color: var(--slide-cap-bg);
+    }
+
+    /* Los slides se apilan en la misma celda (en vez de position: absolute)
+       para que el carrusel tome la altura del slide más alto */
+    #slides {
+        display: grid;
+    }
+
+    .slide {
+        grid-area: 1 / 1;
+        position: relative;
+        inset: auto;
+    }
+
+    .slide picture,
+    .slide img {
+        height: auto;
+    }
+
+    .cap {
+        position: static;
+        display: block;
+        background: var(--slide-cap-bg);
+        padding: 24px 0 72px;
+    }
+
+    .cap p {
+        margin-bottom: 18px;
+    }
+
+    /* Flechas abajo, a los lados de los puntos */
+    .arrow {
+        display: grid;
+        top: auto;
+        bottom: 12px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+    }
+
+    .dots {
+        bottom: 28px;
+    }
+}
+
+/* =========================================================
+   MENOS MOVIMIENTO
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+    }
+
+    .slide img {
+        transform: none;
     }
 }

@@ -1,10 +1,46 @@
 /* =========================================================
-   BASE: RESET, TIPOGRAFÍA, UTILIDADES Y CONTROL DE IMÁGENES
+   BASE: FUENTES, RESET, TIPOGRAFÍA, BOTONES, UTILIDADES
+   Y ANIMACIONES
    ========================================================= */
+
+/* Fuentes servidas desde el propio sitio (carpeta fonts/, licencia OFL):
+   no dependen de Google Fonts y funcionan sin internet. Inter es variable
+   (un solo archivo para 400-600). */
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url("../fonts/inter-latin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../fonts/poppins-600.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/poppins-700.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url("../fonts/poppins-800.woff2") format("woff2");
+}
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+    scroll-padding-top: calc(var(--hh) + env(safe-area-inset-top, 0px));
 }
 
 *,
@@ -17,12 +53,11 @@ body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font:
-        16px/1.6 "Segoe UI",
-        system-ui,
-        -apple-system,
-        Roboto,
-        sans-serif;
+    font: 16px/1.65 var(--font);
+    -webkit-font-smoothing: antialiased;
+    transition:
+        background 0.3s,
+        color 0.3s;
 }
 
 /* Imágenes generales */
@@ -39,52 +74,123 @@ picture {
     height: 100%;
 }
 
+a {
+    color: var(--accent);
+}
+
 /* Tipografía */
 h1,
 h2,
-h3 {
+h3,
+h4 {
+    font-family: var(--font-h);
     line-height: 1.2;
     margin: 0 0 0.5em;
+    letter-spacing: -0.01em;
 }
 
 h2 {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+}
+
+h3 {
+    font-size: 1.12rem;
+}
+
+p {
+    margin: 0 0 1em;
 }
 
 /* Contenedor principal */
 .wrap {
-    max-width: 1100px;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 22px;
 }
 
-/* Espaciado general de las secciones */
-section {
-    padding: 56px 0;
-}
-
-/* Vistas */
+/* Vistas (Inicio, Nosotros, Solicitar): solo se ve la activa */
 .view {
     display: none;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - var(--hh));
 }
 
 .view.on {
     display: block;
 }
 
-/* Botones */
-.btn {
+/* Secciones */
+.sec {
+    padding: 88px 0;
+}
+
+.soft {
+    background: var(--soft);
+}
+
+/* Encabezado de sección: antetítulo, título y texto centrados */
+.head {
+    max-width: 680px;
+    margin: 0 auto 44px;
+    text-align: center;
+}
+
+.head p {
+    color: var(--ink2);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.eyebrow {
     display: inline-block;
-    border: 0;
-    border-radius: var(--r);
+    font: 700 0.78rem/1 var(--font-h);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
     background: var(--accent);
     color: var(--accent-ink);
-    font: 600 1rem inherit;
-    font-family: inherit;
-    padding: 12px 22px;
+    font: 600 1rem/1.2 var(--font);
+    padding: 13px 24px;
     cursor: pointer;
     text-decoration: none;
+    transition:
+        transform 0.2s,
+        background 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
+}
+
+.btn:hover {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* Botón con borde blanco, para usar sobre imágenes */
+.btn.ghost {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.85);
+    color: #fff;
+}
+
+.btn.ghost:hover {
+    background: #fff;
+    color: var(--navy);
+    box-shadow: none;
 }
 
 .btn.alt {
@@ -93,9 +199,49 @@ section {
     border: 1px solid var(--line);
 }
 
+.btn.alt:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: none;
+}
+
 .btn:disabled {
     opacity: 0.6;
     cursor: wait;
+    transform: none;
+}
+
+/* Botones cuadrados con ícono (tema, panel, menú) */
+.iconbtn {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+        border-color 0.2s,
+        color 0.2s;
+}
+
+.iconbtn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.iconbtn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 /* Accesibilidad */
@@ -105,203 +251,19 @@ section {
 }
 
 /* =========================================================
-   HOME: ELIMINAR ESPACIOS VERTICALES INNECESARIOS
-   ========================================================= */
-
-#home.view-home {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-/* =========================================================
-   CARRUSEL PRINCIPAL
-   Ocupa el espacio disponible debajo del header.
-   --header-height = altura real del header fijo (nav de 64px
-   + zona segura de pantallas con notch), igual que el padding
-   de main en layout.css.
-   En pantallas verticales cambia: ver el final de este archivo.
-   ========================================================= */
-
-:root {
-    --header-height: calc(64px + env(safe-area-inset-top, 0px));
-}
-
-#home .hero {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - var(--header-height));
-    height: calc(100svh - var(--header-height));
-
-    margin: 0;
-    padding: 0;
-
-    overflow: hidden;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-color: var(--card);
-}
-
-/* Contenedor de las diapositivas */
-#home .hero #slides {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* Cada diapositiva ocupa el carrusel completo */
-#home .hero #slides > * {
-    width: 100%;
-    height: 100%;
-}
-
-/* Imágenes del carrusel */
-#home .hero #slides img {
-    display: block;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* Imágenes dentro de picture */
-#home .hero #slides picture {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-/* Controles del carrusel */
-#home .hero .arrow,
-#home .hero .dots {
-    z-index: 2;
-}
-
-/* =========================================================
-   IMÁGENES ESTÁTICAS Y SERVICIOS
-   ========================================================= */
-
-.static img,
-#svcList img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-}
-
-/* Contenedores de imágenes estáticas */
-.static {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-/* =========================================================
-   NOSOTROS: IMÁGENES SUPERIOR E INFERIOR
-   La superior mide lo mismo que el carrusel de Home. La
-   inferior, junto con el header y el footer, ocupa justo una
-   pantalla: al llegar al final se ven imagen y footer completos.
-   --footer-height es aproximada (padding 28px x 2 + una línea
-   de texto); si el footer crece, ajústala aquí.
-   ========================================================= */
-
-:root {
-    --footer-height: 80px;
-}
-
-/* La imagen inferior queda pegada al footer */
-#nosotros.view-about {
-    padding-bottom: 0;
-}
-
-#nosotros #abTop {
-    height: calc(100vh - var(--header-height));
-    height: calc(100svh - var(--header-height));
-}
-
-#nosotros #abBottom {
-    height: calc(100vh - var(--header-height) - var(--footer-height));
-    height: calc(100svh - var(--header-height) - var(--footer-height));
-}
-
-#nosotros .static picture,
-#nosotros .static img {
-    display: block;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-}
-
-#nosotros .static img {
-    object-fit: cover;
-    object-position: center;
-}
-
-/* =========================================================
-   TARJETAS DE PRODUCTOS
-   ========================================================= */
-
-.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-
-    height: 100%;
-}
-
-/* Proporción fija 16:10: las imágenes de 800 x 500 px encajan exactas;
-   otras proporciones se muestran completas con franjas blancas. */
-.card img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 10;
-    object-fit: contain;
-    object-position: center;
-    background-color: #fff;
-}
-
-/* =========================================================
    UTILIDADES
    ========================================================= */
 
-.muted {
+.muted,
+.empty {
     color: var(--ink2);
 }
 
-.lead {
-    color: var(--ink2);
-    max-width: 620px;
+.empty {
+    text-align: center;
 }
 
-.lead.flush {
-    margin-top: 0;
-}
-
-.cta {
-    margin-top: 28px;
-}
-
-.pt48 {
-    padding-top: 48px;
-}
-
-.mt40 {
-    margin-top: 40px;
-}
-
-.mt56 {
-    margin-top: 56px;
-}
-
+/* Campo trampa contra bots (honeypot) */
 .hp {
     position: absolute;
     left: -9999px;
@@ -312,96 +274,20 @@ section {
 }
 
 /* =========================================================
-   RESPONSIVE: TABLET Y MÓVIL
+   APARICIÓN AL HACER SCROLL
+   Solo con JavaScript activo (clase "js" en <html>, la pone
+   js/tema-inicial.js); sin JavaScript todo se ve normal.
    ========================================================= */
 
-@media (max-width: 768px) {
-    :root {
-        /* En móvil el footer suele partirse en dos líneas */
-        --footer-height: 116px;
-    }
-
-    .view {
-        min-height: calc(100vh - var(--header-height));
-    }
-
-    #home .hero {
-        height: calc(100vh - var(--header-height));
-        height: calc(100svh - var(--header-height));
-    }
-
-    section {
-        padding: 36px 0;
-    }
-
-    #home.view-home {
-        padding-top: 0;
-        padding-bottom: 0;
-    }
+.js .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
 
-/* =========================================================
-   PANTALLAS VERTICALES (CELULAR Y TABLET)
-   En vertical, una imagen horizontal a pantalla completa se
-   recorta mucho. Aquí el carrusel y las imágenes de Nosotros
-   muestran la imagen completa (su proporción real) y el texto
-   del slide pasa debajo de la imagen, con flechas y puntos en
-   una fila al pie.
-   ========================================================= */
-
-@media (orientation: portrait) and (max-width: 1024px) {
-    #home .hero {
-        height: auto;
-        display: block;
-        background-color: var(--slide-cap-bg);
-    }
-
-    /* Los slides se apilan en la misma celda (en vez de position: absolute)
-       para que el carrusel tome la altura del slide más alto */
-    #home .hero #slides {
-        position: relative;
-        inset: auto;
-        display: grid;
-    }
-
-    #home .hero #slides > * {
-        grid-area: 1 / 1;
-        position: relative;
-        height: auto;
-    }
-
-    #home .hero #slides picture,
-    #home .hero #slides img {
-        height: auto;
-    }
-
-    #home .hero .cap {
-        position: static;
-        background: var(--slide-cap-bg);
-        padding: 20px 0 64px;
-    }
-
-    #home .hero .cap p {
-        margin-bottom: 12px;
-    }
-
-    /* Flechas abajo, a los lados de los puntos */
-    #home .hero .arrow {
-        top: auto;
-        bottom: 8px;
-        transform: none;
-        width: 40px;
-        height: 40px;
-    }
-
-    #home .hero .dots {
-        bottom: 22px;
-    }
-
-    #nosotros #abTop,
-    #nosotros #abBottom,
-    #nosotros .static picture,
-    #nosotros .static img {
-        height: auto;
-    }
+.js .reveal.in {
+    opacity: 1;
+    transform: none;
 }

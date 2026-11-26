@@ -1,4 +1,4 @@
-/* Sitio público: navegación, carrusel, tarjetas y formulario (un solo archivo).
+/* Sitio público: navegación, tema claro/oscuro, carrusel, tarjetas y formulario (un solo archivo).
    El primer slide, los textos, los valores y las imágenes de Nosotros ya vienen del servidor;
    aquí se cargan el resto de slides, los servicios/productos y las opciones del formulario
    con una sola petición a api/content.php. */
@@ -15,16 +15,16 @@ var esc = function (s) {
 };
 function u(p) { return BASE + "/" + String(p).replace(/^\/+/, ""); }
 
-/* Imagen de marcador generada (sin recursos externos), igual que en el servidor */
-function ph(label, h) {
+/* Imagen de marcador generada (sin recursos externos ni texto), igual que placeholder_plain_uri() del servidor */
+function ph(h) {
   return "data:image/svg+xml;utf8," + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(' + h + ',45%,38%)"/><stop offset="1" stop-color="hsl(' + (h + 40) + ',50%,24%)"/></linearGradient></defs><rect width="1600" height="600" fill="url(#g)"/><text x="800" y="320" fill="rgba(255,255,255,.7)" font-family="sans-serif" font-size="56" text-anchor="middle">' + esc(label) + "</text></svg>"
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(' + h + ',35%,40%)"/><stop offset="1" stop-color="hsl(' + (h + 40) + ',40%,22%)"/></linearGradient></defs><rect width="1600" height="600" fill="url(#g)"/><g transform="translate(1300 460)" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6" stroke-linejoin="round"><rect x="-60" y="-45" width="120" height="90" rx="10"/><circle cx="-25" cy="-15" r="11"/><path d="M-60 35l40-35 25 20 20-15 35 30"/></g></svg>'
   ).replace(/'/g, "%27");
 }
 function pic(img, webp, alt, w, h, o) {
   o = o || {};
   var at = ' width="' + w + '" height="' + h + '"' + (o.priority ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"');
-  if (!img) return '<img src="' + esc(ph(o.label || "Imagen", o.hue || 200)) + '" alt="' + esc(alt) + '"' + at + ">";
+  if (!img) return '<img src="' + esc(ph(o.hue || 200)) + '" alt="' + esc(alt) + '"' + at + ">";
   return "<picture>" + (webp ? '<source type="image/webp" srcset="' + esc(u(webp)) + '">' : "") +
     '<img src="' + esc(u(img)) + '" alt="' + esc(alt) + '"' + at + "></picture>";
 }
@@ -34,38 +34,86 @@ var timer = null;
 
 /* ---------------- Navegación: menú hamburguesa y vistas por hash ---------------- */
 var burger = $("#burger"), menu = $("#menu");
+function closeMenu() { menu.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); }
 burger.addEventListener("click", function () {
   var o = menu.classList.toggle("open");
   burger.setAttribute("aria-expanded", o);
 });
-menu.addEventListener("click", function (e) { if (e.target.tagName === "A") menu.classList.remove("open"); });
+menu.addEventListener("click", function (e) { if (e.target.tagName === "A") closeMenu(); });
+D.addEventListener("click", function (e) { if (!e.target.closest("nav")) closeMenu(); });
 
+/* Cada enlace abre una vista distinta. Un #ancla dentro de una vista (ej. #svcSec)
+   abre esa vista y baja hasta el ancla. */
 var VIEWS = ["home", "nosotros", "servicios"];
-var TITLES = { home: "Home", nosotros: "Nosotros", servicios: "Servicios y productos" };
+var TITLES = { home: "Inicio", nosotros: "Nosotros", servicios: "Solicitar servicio" };
 var EMPRESA = ($('meta[name="application-name"]') || {}).content || "";
-function route() { var h = location.hash.replace("#", ""); return VIEWS.indexOf(h) > -1 ? h : "home"; }
+function hash() { try { return decodeURIComponent(location.hash.slice(1)); } catch (e) { return ""; } }
+function route() {
+  var h = hash();
+  if (VIEWS.indexOf(h) > -1) return h;
+  var el = h && D.getElementById(h), v = el && el.closest(".view");
+  return v ? v.id : "home";
+}
 function show() {
-  var r = route();
+  var r = route(), h = hash();
   VIEWS.forEach(function (id) { D.getElementById(id).classList.toggle("on", id === r); });
   $$("nav a[data-v]").forEach(function (a) {
     var on = a.dataset.v === r;
     a.classList.toggle("on", on);
     on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current");
   });
-  window.scrollTo(0, 0);
+  var target = h && VIEWS.indexOf(h) < 0 && D.getElementById(h);
+  if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
   D.title = TITLES[r] + (EMPRESA ? " | " + EMPRESA : "");
   r === "home" ? play() : stop();
   if (r === "servicios") getToken().catch(function () {}); // prepara el token CSRF del formulario
 }
 window.addEventListener("hashchange", show);
 
+/* Sombra del encabezado al bajar */
+var header = $("#top");
+function onScroll() { header.classList.toggle("scrolled", window.scrollY > 8); }
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+/* ---------------- Modo oscuro ----------------
+   El tema inicial lo pone js/tema-inicial.js. Aquí: el botón luna/sol guarda la elección;
+   mientras el visitante no elija, se sigue el tema del sistema si cambia. */
+var TKEY = "zarmex-tema", themeBtn = $("#themeBtn");
+function theme() { return R.getAttribute("data-theme") === "dark" ? "dark" : "light"; }
+function themeLabel() { themeBtn.setAttribute("aria-label", theme() === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"); }
+function savedTheme() { try { return localStorage.getItem(TKEY); } catch (e) { return null; } }
+themeBtn.addEventListener("click", function () {
+  var t = theme() === "dark" ? "light" : "dark";
+  R.setAttribute("data-theme", t);
+  try { localStorage.setItem(TKEY, t); } catch (e) {}
+  themeLabel();
+});
+if (window.matchMedia) {
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  var onSys = function (e) { if (!savedTheme()) { R.setAttribute("data-theme", e.matches ? "dark" : "light"); themeLabel(); } };
+  if (mq.addEventListener) mq.addEventListener("change", onSys); else if (mq.addListener) mq.addListener(onSys);
+}
+themeLabel();
+
+/* ---------------- Aparición suave al hacer scroll ---------------- */
+var io = "IntersectionObserver" in window ? new IntersectionObserver(function (en) {
+  en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+}, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }) : null;
+$$(".reveal").forEach(function (el) { if (io) io.observe(el); else el.classList.add("in"); });
+
 /* ---------------- Carrusel ---------------- */
 var hero = $("#hero");
+/* Igual que slide_html() y slide_ctas() de includes/render.php */
 function slideHTML(s, i, n) {
+  var tag = i === 0 ? "h1" : "h2"; // un solo h1 por página
+  var main = s.enlace
+    ? '<a class="btn" href="' + esc(s.enlace) + '">Contáctanos</a>'
+    : '<a class="btn" href="#servicios">Solicitar cotización</a>';
   return '<div class="slide" role="group" aria-label="' + (i + 1) + " de " + n + '" data-id="' + esc(s.id) + '">' +
-    pic(s.imagen, s.webp, s.titulo, 1600, 600, { priority: i === 0, label: "Imagen " + (i + 1), hue: 200 + i * 35 }) +
-    '<div class="cap"><div class="wrap"><h1>' + esc(s.titulo) + "</h1><p>" + esc(s.subtitulo) + "</p>" +
-    (s.enlace ? '<a class="btn" href="' + esc(s.enlace) + '">Contáctanos</a>' : "") + "</div></div></div>";
+    pic(s.imagen, s.webp, "", 1600, 600, { priority: i === 0, hue: 200 + i * 35 }) +
+    '<div class="cap"><div class="wrap"><div class="cap-in"><' + tag + ' class="h1">' + esc(s.titulo) + "</" + tag + "><p>" + esc(s.subtitulo) + "</p>" +
+    '<div class="ctas">' + main + '<a class="btn ghost" href="#svcSec">Ver servicios</a></div></div></div></div></div>';
 }
 function renderSlides() {
   if (!hero) return;
@@ -84,10 +132,10 @@ function renderSlides() {
   if (S.cur >= L) S.cur = 0;
   go(S.cur);
   $("#dots").innerHTML = S.slides.map(function (_, i) {
-    return '<button aria-label="Ir a la diapositiva ' + (i + 1) + '" data-i="' + i + '"></button>';
+    return '<button type="button" aria-label="Ir a la diapositiva ' + (i + 1) + '" data-i="' + i + '"></button>';
   }).join("");
   go(S.cur);
-  $("#prev").hidden = $("#next").hidden = L < 2;
+  $("#prev").hidden = $("#next").hidden = $("#dots").hidden = L < 2;
   play();
 }
 function go(n) {
@@ -100,7 +148,7 @@ function go(n) {
 function play() {
   stop();
   var L = S.slides.length || $$(".slide").length;
-  if (L > 1 && route() === "home") timer = setInterval(function () { go(S.cur + 1); }, 5000);
+  if (L > 1 && route() === "home") timer = setInterval(function () { go(S.cur + 1); }, 6000);
 }
 function stop() { clearInterval(timer); }
 if (hero) {
@@ -123,18 +171,20 @@ if (hero) {
 /* ---------------- Servicios y productos (tarjetas + select del formulario) ---------------- */
 var GROUPS = [["Servicio", "Nuestros servicios", "Servicios"], ["Producto", "Nuestros productos", "Productos"]];
 function card(s, i) {
-  return '<article class="card svc">' + pic(s.imagen, s.webp, s.nombre, 800, 500, { label: s.nombre, hue: 30 + i * 40 }) +
-    "<div><h3>" + esc(s.nombre) + "</h3><p>" + esc(s.descripcion) + "</p>" +
-    (s.precio ? '<p class="price"><strong>' + esc(s.precio) + "</strong></p>" : "") + "</div></article>";
+  return '<article class="card svc"><div class="im">' + pic(s.imagen, s.webp, s.nombre, 800, 500, { hue: 30 + i * 40 }) +
+    '<span class="badge' + (s.tipo === "Producto" ? " prod" : "") + '">' + esc(s.tipo) + "</span></div>" +
+    '<div class="bd"><h3>' + esc(s.nombre) + "</h3><p>" + esc(s.descripcion) + "</p>" +
+    '<div class="ft"><span class="price">' + esc(s.precio || "") + "</span>" +
+    '<a class="btn" href="#servicios" data-svc="' + esc(s.id) + '">Solicitar</a></div></div></article>';
 }
 function renderItems() {
   var html = GROUPS.map(function (g) {
     var items = S.items.map(function (x, i) { return [x, i]; }).filter(function (p) { return p[0].tipo === g[0]; });
     return items.length
-      ? '<h2 class="grp">' + g[1] + '</h2><div class="grid">' + items.map(function (p) { return card(p[0], p[1]); }).join("") + "</div>"
+      ? '<h3 class="gtitle">' + g[1] + '</h3><div class="grid gauto">' + items.map(function (p) { return card(p[0], p[1]); }).join("") + "</div>"
       : "";
   }).join("");
-  $("#svcList").innerHTML = html || '<p class="muted">Aún no hay servicios ni productos publicados.</p>';
+  $("#svcList").innerHTML = html || '<p class="empty">Aún no hay servicios ni productos publicados.</p>';
 
   var sel = $("#servicio"), v = sel.value;
   sel.innerHTML = '<option value="">Selecciona una opción</option>' + GROUPS.map(function (g) {
@@ -151,12 +201,20 @@ function loadContent() {
     .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
     .then(function (c) { S.slides = c.slides || []; S.items = c.items || []; renderSlides(); renderItems(); })
     .catch(function () {
-      $("#svcList").innerHTML = '<p class="muted">No se pudo cargar el contenido. <button type="button" class="btn alt" id="retry">Reintentar</button></p>';
+      $("#svcList").innerHTML = '<p class="empty">No se pudo cargar el contenido. <button type="button" class="btn alt" id="retry">Reintentar</button></p>';
       $("#servicio").innerHTML = '<option value="">No disponible</option>';
     });
 }
 $("#svcList").addEventListener("click", function (e) {
-  if (e.target.id === "retry") { $("#svcList").innerHTML = '<p class="muted">Cargando…</p>'; loadContent(); }
+  if (e.target.id === "retry") { $("#svcList").innerHTML = '<p class="empty">Cargando…</p>'; loadContent(); }
+});
+/* Botón "Solicitar" de cada tarjeta: deja elegido ese servicio en el formulario */
+D.addEventListener("click", function (e) {
+  var a = e.target.closest("a[data-svc]");
+  if (!a) return;
+  var sel = $("#servicio");
+  sel.value = a.getAttribute("data-svc");
+  setErr(sel, "");
 });
 
 /* ---------------- Formulario: validación en cliente + envío por fetch ---------------- */

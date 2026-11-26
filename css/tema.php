@@ -13,12 +13,16 @@ $a = content_get()['ajustes'];
 $acento = valid_hex((string)$a['color_acento']) ? strtolower((string)$a['color_acento']) : '';
 $css = '';
 if ($acento !== '') {
+    [$r, $g, $b] = [hexdec(substr($acento, 1, 2)), hexdec(substr($acento, 3, 2)), hexdec(substr($acento, 5, 2))];
     $texto = valid_hex((string)$a['color_acento_texto']) ? strtolower((string)$a['color_acento_texto']) : '';
     if ($texto === '') { // blanco o casi negro, según la luminosidad del acento
-        [$r, $g, $b] = [hexdec(substr($acento, 1, 2)), hexdec(substr($acento, 3, 2)), hexdec(substr($acento, 5, 2))];
         $texto = (0.299 * $r + 0.587 * $g + 0.114 * $b) > 160 ? '#16324a' : '#ffffff';
     }
-    $css = ":root{--accent:{$acento};--accent-ink:{$texto}}\n";
+    // --accent2: el mismo color un 12 % más oscuro (botones al pasar el cursor)
+    $hover = sprintf('#%02x%02x%02x', (int)round($r * 0.88), (int)round($g * 0.88), (int)round($b * 0.88));
+    // --accent-soft: el acento al 12 % de opacidad (fondo de los íconos)
+    $suave = "rgba({$r},{$g},{$b},.12)";
+    $css = ":root{--accent:{$acento};--accent2:{$hover};--accent-ink:{$texto};--accent-soft:{$suave}}\n";
 }
 $etag = '"' . md5($css) . '"';
 header('Content-Type: text/css; charset=utf-8');
