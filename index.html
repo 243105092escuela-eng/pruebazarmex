@@ -3,86 +3,195 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Modelo de página</title>
+<title>Inicio</title>
+<meta name="description" content="Servicios y productos profesionales. Solicita tu cotización.">
+<meta name="theme-color" content="#16324a">
+<!-- Vista previa al compartir el enlace (WhatsApp, Facebook, etc.).
+     Las redes NO ejecutan JavaScript: estos textos se editan aquí.
+     Cuando tengan dominio, cambien og:image y og:url por la dirección completa,
+     por ejemplo https://www.suempresa.com/img/compartir.png -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="[Nombre de la empresa]">
+<meta property="og:title" content="[Nombre de la empresa] | Servicios profesionales">
+<meta property="og:description" content="Soluciones profesionales a la medida de tu empresa. Solicita tu cotización.">
+<meta property="og:image" content="img/compartir.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_MX">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" id="favicon" href="img/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("modelo-pagina-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/responsive.css">
-
 </head>
 <body>
-<header><div class="wrap"><nav aria-label="Principal">
-<span class="logo">[Nombre de la empresa]</span>
-<button id="burger" aria-label="Abrir menú" aria-expanded="false">☰</button>
+<header id="top"><div class="wrap"><nav aria-label="Principal">
+<a href="#home" class="logo" id="brand" aria-label="Ir al inicio"></a>
+<div class="navr">
 <ul id="menu">
-<li><a href="#home" data-v="home" class="on">Home</a></li>
+<li><a href="#home" data-v="home" class="on">Inicio</a></li>
 <li><a href="#nosotros" data-v="nosotros">Nosotros</a></li>
-<li><a href="#servicios" data-v="servicios">Servicios y productos</a></li>
-<li><a href="#" id="openAdmin" class="sm">⚙ Admin</a></li>
-</ul></nav></div></header>
+<li><a href="#servicios" data-v="servicios" class="cta">Solicitar servicio</a></li>
+</ul>
+<button id="themeBtn" class="iconbtn" type="button" aria-label="Cambiar tema">
+<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+</button>
+<button id="openAdmin" class="iconbtn" type="button" aria-label="Panel de administración" title="Panel de administración">
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+</button>
+<button id="burger" class="iconbtn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+</button>
+</div>
+</nav></div></header>
 
 <main>
-<section id="home" class="view" style="padding:0">
+<!-- ============ INICIO ============ -->
+<section id="home" class="view">
 <div class="hero" id="hero" aria-roledescription="carrusel" aria-label="Destacados">
 <div id="slides"></div>
-<button class="arrow" id="prev" aria-label="Anterior">‹</button>
-<button class="arrow" id="next" aria-label="Siguiente">›</button>
+<button class="arrow" id="prev" type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="arrow" id="next" type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
 <div class="dots" id="dots"></div>
 </div>
-<div class="wrap" style="padding-top:48px;padding-bottom:56px">
-<p style="color:var(--ink2);max-width:620px;margin-top:0">Conoce lo que ofrecemos. Para contratar un servicio o pedir un producto, usa el formulario.</p>
-<div id="svcList"></div>
-<p style="margin-top:28px"><a class="btn" href="#servicios">Hacer una solicitud</a></p>
-</div>
-</section>
 
-<section id="nosotros" class="view" style="padding-top:0">
-<div class="static" id="abTop"></div>
-<div class="wrap" style="padding-top:48px">
-<h2>Nuestros valores</h2>
-<div class="grid" id="values"></div>
-<div class="story" style="margin-top:56px">
-<h2>Nuestra historia</h2>
-<p>Aquí va el texto del origen de la empresa: cómo empezó, quiénes la fundaron y qué problema querían resolver.</p>
-<p>Un segundo párrafo para contar la trayectoria, los logros y hacia dónde va la empresa.</p>
-</div></div>
-<div class="static" id="abBottom" style="margin-top:40px"></div>
-</section>
+<div class="wrap"><div class="stats reveal" id="stats"></div></div>
 
-<section id="servicios" class="view">
+<div class="sec">
 <div class="wrap">
-<h2>Solicitar un servicio o producto</h2>
-<p style="color:var(--ink2);max-width:620px">Elige lo que necesitas y cuéntanos los detalles. Te responderemos con una propuesta.</p>
+<div class="head reveal">
+<span class="eyebrow">¿Por qué elegirnos?</span>
+<h2>Trabajamos para que tú te enfoques en lo importante</h2>
+<p>Te acompañamos desde la primera llamada hasta la entrega, con atención cercana y resultados medibles.</p>
+</div>
+<div class="grid g4 reveal" id="features"></div>
+</div>
+</div>
 
+<div class="sec soft" id="svcSec">
+<div class="wrap">
+<div class="head reveal">
+<span class="eyebrow">Lo que ofrecemos</span>
+<h2>Servicios y productos</h2>
+<p>Conoce nuestras soluciones. Para contratar un servicio o pedir un producto, da clic en «Solicitar».</p>
+</div>
+<div id="svcList" class="reveal"></div>
+</div>
+</div>
+
+<div class="sec" id="tstSec">
+<div class="wrap">
+<div class="head reveal"><span class="eyebrow">Testimonios</span><h2>Lo que dicen nuestros clientes</h2></div>
+<div class="grid g3 reveal" id="tst"></div>
+</div>
+</div>
+
+<div class="sec soft" id="faqSec">
+<div class="wrap">
+<div class="head reveal"><span class="eyebrow">Preguntas frecuentes</span><h2>¿Tienes dudas?</h2><p>Aquí respondemos las preguntas más comunes. Si no encuentras la tuya, escríbenos.</p></div>
+<div class="faq reveal" id="faqList"></div>
+</div>
+</div>
+
+<div id="blocksHome"></div>
+
+<div class="band"><div class="wrap band-in reveal">
+<div><h2>¿Listo para empezar?</h2><p>Cuéntanos lo que necesitas y te enviamos una propuesta sin compromiso.</p></div>
+<a class="btn" href="#servicios">Solicitar cotización</a>
+</div></div>
+</section>
+
+<!-- ============ NOSOTROS ============ -->
+<section id="nosotros" class="view">
+<div class="pagehead" id="abTop"></div>
+
+<div class="sec">
+<div class="wrap">
+<div class="head reveal"><span class="eyebrow">Quiénes somos</span><h2>Nuestro propósito</h2></div>
+<div class="grid g2 reveal" id="mv"></div>
+</div>
+</div>
+
+<div class="sec soft">
+<div class="wrap split reveal">
+<div class="story"><span class="eyebrow">Nuestra historia</span><h2>Cómo empezamos</h2><div id="storyText"></div></div>
+<div class="split-img" id="abBottom"></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="wrap">
+<div class="head reveal"><span class="eyebrow">Lo que nos mueve</span><h2>Nuestros valores</h2></div>
+<div class="grid g3 reveal" id="values"></div>
+</div>
+</div>
+
+<div id="blocksAbout"></div>
+</section>
+
+<!-- ============ SOLICITAR ============ -->
+<section id="servicios" class="view">
+<div class="sec">
+<div class="wrap">
+<div class="head reveal">
+<span class="eyebrow">Contacto</span>
+<h2>Solicitar un servicio o producto</h2>
+<p>Elige lo que necesitas y cuéntanos los detalles. Te responderemos con una propuesta.</p>
+</div>
+<div class="contact reveal">
+<aside class="info" id="contactInfo"></aside>
+<div>
 <form id="form" novalidate>
 <div class="f"><label for="nombre">Nombre completo *</label><input id="nombre" name="nombre" autocomplete="name"><span class="err"></span></div>
 <div class="f"><label for="email">Correo electrónico *</label><input id="email" name="email" type="email" autocomplete="email"><span class="err"></span></div>
 <div class="f"><label for="tel">Teléfono *</label><input id="tel" name="tel" type="tel" autocomplete="tel"><span class="err"></span></div>
-<div class="f"><label for="empresa">Empresa (opcional)</label><input id="empresa" name="empresa"><span class="err"></span></div>
+<div class="f"><label for="empresa">Empresa (opcional)</label><input id="empresa" name="empresa" autocomplete="organization"><span class="err"></span></div>
 <div class="f"><label for="servicio">Servicio o producto *</label><select id="servicio" name="servicio"></select><span class="err"></span></div>
 <div class="f"><label for="plazo">Prioridad / plazo</label><select id="plazo"><option>Sin prisa</option><option>Este mes</option><option>Esta semana</option><option>Urgente</option></select><span class="err"></span></div>
 <div class="f"><label for="cant">Cantidad (opcional)</label><input id="cant" type="number" min="1"><span class="err"></span></div>
 <div class="f full"><label for="desc">Describe lo que necesitas *</label><textarea id="desc" rows="4"></textarea><span class="err"></span></div>
-<div class="f full"><label style="font-weight:400"><input type="checkbox" id="terms" style="width:auto"> Acepto los términos y la política de privacidad *</label><span class="err"></span></div>
+<div class="f full"><label class="check"><input type="checkbox" id="terms"> <span>Acepto los términos y el <a href="#" class="privacy">aviso de privacidad</a> *</span></label><span class="err"></span></div>
 <div class="f full"><button class="btn" type="submit" id="send">Enviar solicitud</button></div>
 </form>
 <div class="ok" id="ok" role="status">¡Solicitud enviada! Te contactaremos pronto.</div>
-</div></section>
+</div>
+</div>
+</div>
+</div>
+</section>
 </main>
 
-<footer><div class="wrap"><span>© 2026 [Nombre de la empresa]. Todos los derechos reservados.</span><span>contacto@ejemplo.com · +00 000 000 0000</span></div></footer>
+<footer><div class="wrap">
+<div class="fgrid">
+<div><div class="logo flogo" id="footBrand"></div><p id="footTag"></p></div>
+<div><h4>Navegación</h4><ul><li><a href="#home">Inicio</a></li><li><a href="#nosotros">Nosotros</a></li><li><a href="#svcSec">Servicios y productos</a></li><li><a href="#servicios">Solicitar servicio</a></li></ul></div>
+<div><h4>Contacto</h4><ul id="footContact"></ul></div>
+<div id="footSocialCol"><h4>Síguenos</h4><div class="social" id="footSocial"></div></div>
+</div>
+<div class="fbot"><span>© <span id="year"></span> <span id="footName"></span>. Todos los derechos reservados.</span><span><a href="#" class="privacy">Aviso de privacidad</a></span></div>
+</div></footer>
+
+<a id="wa" class="wa" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" hidden>
+<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7a.6.6 0 0 0 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8.9 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.7-.4z"/></svg>
+</a>
 
 <dialog id="admin" aria-label="Panel de administración">
-<div class="ah"><strong>Panel de administración</strong><button class="btn alt sm" id="closeAdmin">Cerrar</button></div>
+<div class="ah"><strong>Panel de administración</strong><button class="btn alt sm" id="closeAdmin" type="button">Cerrar</button></div>
 <div id="login" class="ab">
 <p class="hint">Modelo: PIN de ejemplo <b>1234</b>. En la versión real se reemplaza por usuario y contraseña en un servidor.</p>
 <div class="f" style="max-width:260px"><label for="pin">PIN</label><input id="pin" type="password" inputmode="numeric"><span class="err" id="pinErr"></span></div>
-<button class="btn" id="pinGo" style="margin-top:8px">Entrar</button>
+<button class="btn" id="pinGo" type="button" style="margin-top:8px">Entrar</button>
 </div>
 <div id="panel" hidden>
 <div class="tabs" id="tabs">
-<button data-t="car" class="on">Carrusel</button><button data-t="svc">Servicios y productos</button><button data-t="abt">Imágenes de Nosotros</button>
+<button type="button" data-t="emp" class="on">Empresa y contacto</button><button type="button" data-t="car">Carrusel</button><button type="button" data-t="ini">Inicio</button><button type="button" data-t="svc">Servicios y productos</button><button type="button" data-t="tst">Testimonios</button><button type="button" data-t="faq">Preguntas frecuentes</button><button type="button" data-t="abt">Nosotros</button><button type="button" data-t="blk">Secciones extra</button>
 </div>
 <div class="ab" id="tabBody"></div>
 </div>

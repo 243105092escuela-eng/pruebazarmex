@@ -3,4 +3,5 @@
 "use strict";
 A.renderAll();
 A.show();
+A.reveal();
 })(window.App);

@@ -1,10 +1,38 @@
-/* Adaptación a móvil y preferencias de movimiento. */
-@media(max-width:700px){
-:root{--hero-h:300px}
-#burger{display:block}
-nav ul{display:none;position:absolute;top:calc(64px + env(safe-area-inset-top,0px));left:0;right:0;background:var(--card);border-bottom:1px solid var(--line);flex-direction:column;padding:10px 20px}
-nav ul.open{display:flex}
-form{grid-template-columns:1fr}
-.row{grid-template-columns:1fr}.row img{width:100%;height:auto;aspect-ratio:16/10}
+/* Adaptación a tablet, móvil y preferencias de movimiento. */
+@media(max-width:960px){
+.g4{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(2,1fr)}
+.stats{grid-template-columns:repeat(2,1fr)}
+.stat:nth-child(3){border-left:0}
+.stat:nth-child(n+3){border-top:1px solid var(--line)}
+.split,.blk.has-img{grid-template-columns:1fr;gap:32px}
+.blk.img-left .blk-img{order:0}
+.contact{grid-template-columns:1fr}
+.info{position:static}
+.fgrid{grid-template-columns:1fr 1fr}
+.fgrid>div:first-child{grid-column:1/-1}
 }
-@media(prefers-reduced-motion:reduce){.slide{transition:none}html{scroll-behavior:auto}}
+@media(max-width:760px){
+:root{--hh:64px;--hero-h:72vh}
+.sec{padding:64px 0}
+#burger{display:inline-grid}
+nav ul{display:none;position:absolute;top:calc(var(--hh) + env(safe-area-inset-top,0px));left:0;right:0;background:var(--card);border-bottom:1px solid var(--line);box-shadow:var(--shadow);flex-direction:column;align-items:stretch;padding:12px 22px 18px}
+nav ul.open{display:flex}
+nav ul a.cta{margin:8px 0 0;text-align:center}
+.arrow{display:none}
+.dots{bottom:56px}
+.g2,.g3,.g4{grid-template-columns:1fr}
+form{grid-template-columns:1fr;padding:22px}
+.fgrid{grid-template-columns:1fr}
+.row{grid-template-columns:1fr}.row img{width:100%;height:auto;aspect-ratio:16/10}
+.row .acts{flex-direction:row}
+.pair{grid-template-columns:1fr}
+.wa{width:54px;height:54px;right:16px;bottom:16px}
+}
+@media(max-width:420px){.stats{grid-template-columns:1fr 1fr}.stat{padding:18px 10px}}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+*,*::before,*::after{animation:none!important;transition:none!important}
+.reveal{opacity:1;transform:none}
+.slide img{transform:none}
+}
