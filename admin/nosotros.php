@@ -110,6 +110,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             content_rebuild();
             json_out(['ok' => true, 'message' => 'Historia guardada.']);
 
+        case 'mision':
+            ajustes_save([
+                'eslogan' => post_str('eslogan', 200),
+                'mision'  => post_str('mision', 1000, true),
+                'vision'  => post_str('vision', 1000, true),
+            ]);
+            content_rebuild();
+            json_out(['ok' => true, 'message' => 'Textos guardados.']);
+
         case 'crear':
             $n = (int)$pdo->query('SELECT COUNT(*) FROM valores')->fetchColumn();
             if ($n >= MAX_VALORES) { json_fail('Máximo ' . MAX_VALORES . ' valores.', 422); }
@@ -170,6 +179,18 @@ admin_head('Nosotros', 'nosotros', $user);
   <h2>Imágenes</h2>
   <p class="hint">Dos imágenes anchas (1600 px de ancho, JPG/PNG/WebP, máx. 3 MB): una arriba y otra abajo de la sección Nosotros.</p>
   <div id="imgs"><?= imagen_block_html('superior', $imgs['superior']) ?><hr class="sep"><?= imagen_block_html('inferior', $imgs['inferior']) ?></div>
+</div>
+
+<div class="card">
+  <h2>Eslogan, misión y visión</h2>
+  <p class="hint">El eslogan aparece bajo el título «Nosotros», en el pie de página y al compartir el enlace. Si dejas vacía la misión o la visión, esa tarjeta no se muestra.</p>
+  <form data-action="mision" novalidate>
+    <?= csrf_field() ?>
+    <div class="f"><label for="m_esl">Eslogan</label><input id="m_esl" name="eslogan" maxlength="200" value="<?= e($aj['eslogan']) ?>"></div>
+    <div class="f"><label for="m_mis">Misión</label><textarea id="m_mis" name="mision" rows="3" maxlength="1000"><?= e($aj['mision']) ?></textarea></div>
+    <div class="f"><label for="m_vis">Visión</label><textarea id="m_vis" name="vision" rows="3" maxlength="1000"><?= e($aj['vision']) ?></textarea></div>
+    <div class="actions"><button type="submit" class="btn">Guardar textos</button></div>
+  </form>
 </div>
 
 <div class="card">

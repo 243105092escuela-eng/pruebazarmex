@@ -462,6 +462,61 @@ pages.usuarios = function () {
       .then(function () { busy(btn, false); });
   });
 };
+/* ---------- Listas genéricas (includes/listas.php): cifras, puntos, testimonios, preguntas y secciones ----------
+   Cada <div class="lista" data-lista="..."> funciona por su cuenta; varias pueden convivir en la misma página. */
+function initLista(box) {
+  var key = box.dataset.lista, list = $(".list", box), add = $("[data-add]", box), MAX = +box.dataset.max;
+  function req(data) { data.lista = key; return api(data); }
+  function all(j) { setHTML(list, j.html); add.disabled = j.total >= MAX; if (j.message) toast(j.message); }
+  list.addEventListener("input", markDirty);
+  list.addEventListener("change", function (e) {
+    var t = e.target, row = t.closest(".row"); if (!row) return;
+    if (t.type === "file") { if (previewFile(t, $(".thumb", row))) { row.classList.add("dirty"); var q = $("[name=quitar_imagen]", row); if (q) q.checked = false; } return; }
+    if (t.name === "icono") { $("[data-prev]", row).innerHTML = t.selectedOptions[0].dataset.svg; row.classList.add("dirty"); }
+    if (t.name === "quitar_imagen" || t.tagName === "SELECT") row.classList.add("dirty");
+    if (t.dataset.act === "toggle") {
+      req({ action: "activo", id: row.dataset.id, activo: t.checked ? "1" : "0" }).then(function (j) { row.classList.toggle("inactive", !t.checked); toast(j.message); })
+        .catch(function (err) { t.checked = !t.checked; fail(err); });
+    }
+  });
+  list.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b || b.type === "checkbox") return;
+    var row = b.closest(".row"), id = row.dataset.id, act = b.dataset.act;
+    if (act === "pick") { $("input[type=file]", row).click(); }
+    else if (act === "save") {
+      busy(b, true, "Guardando…");
+      var fd = collect(row, { action: "guardar", id: id, lista: key });
+      api(fd).then(function (j) { swapRow(row, j.row); toast(j.message); })
+        .catch(function (err) { fail(err); busy(b, false); });
+    } else if (act === "up" || act === "down") req({ action: "mover", id: id, dir: act }).then(all).catch(fail);
+    else if (act === "del") confirmBox("Se eliminará de forma permanente" + ($(".thumb-col", row) ? ", junto con su imagen." : "."), "Eliminar", "¿Eliminar?")
+      .then(function (ok) { if (ok) req({ action: "eliminar", id: id }).then(all).catch(fail); });
+  });
+  add.addEventListener("click", function () { busy(add, true); req({ action: "crear" }).then(all).catch(fail).then(function () { busy(add, false); add.disabled = $$(".row", list).length >= MAX; }); });
+  sortable(list, function (ids) {
+    req({ action: "ordenar", ids: ids }).then(function (j) { toast(j.message); }).catch(function (err) { fail(err); location.reload(); });
+  });
+}
+$$(".lista[data-lista]").forEach(initLista);
+
+/* ---------- Inicio: cambiar la gráfica entre "Por semana" y "Por mes" ---------- */
+$$(".seg [data-periodo]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var card = b.closest(".card");
+    $$("[data-periodo]", card).forEach(function (x) { var on = x === b; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
+    $$("[data-chart]", card).forEach(function (c) { c.hidden = c.dataset.chart !== b.dataset.periodo; });
+  });
+});
+
+/* ---------- Formularios simples de textos (p. ej. Misión y visión) ---------- */
+$$("form[data-action]").forEach(function (f) {
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = $("button[type=submit]", f); busy(btn, true, "Guardando…");
+    api(collect(f, { action: f.dataset.action })).then(function (j) { toast(j.message); }).catch(fail).then(function () { busy(btn, false); });
+  });
+});
+
 /* ---------- arranque ---------- */
 var page = D.body.getAttribute("data-page");
 if (pages[page]) pages[page]();

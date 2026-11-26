@@ -30,6 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $texto = strtolower(post_str('color_acento_texto', 7));
         if (!valid_hex($texto)) { $err['color_acento_texto'] = 'Color no válido.'; }
     }
+    $wa = preg_replace('/[\s()+\-.]/', '', post_str('whatsapp', 30)) ?? '';
+    if ($wa !== '' && !preg_match('/^\d{8,15}$/', $wa)) { $err['whatsapp'] = 'Solo números con código de país, por ejemplo 5215512345678.'; }
+    $redes = [];
+    foreach (redes_sociales() as $k => [$nombreRed]) {
+        $redes[$k] = post_str($k, 255);
+        if ($redes[$k] !== '' && !preg_match('~^https?://[^\s]+$~i', $redes[$k])) { $err[$k] = 'Pega el enlace completo, que empiece con https://'; }
+    }
     if ($err) { json_fail('Revisa los campos marcados.', 422, ['errors' => $err]); }
 
     $logo = $a['logo'];
@@ -52,7 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'texto_footer'       => post_str('texto_footer', 200),
             'color_acento'       => $acento,
             'color_acento_texto' => $texto,
-        ]);
+            'direccion'          => post_str('direccion', 200),
+            'horario'            => post_str('horario', 120),
+            'whatsapp'           => $wa,
+            'whatsapp_msg'       => post_str('whatsapp_msg', 200),
+        ] + $redes);
     } catch (Throwable $t) { image_delete($nuevo); throw $t; }
     if ($logo !== $a['logo']) { image_delete($a['logo'] ?: null); }
     content_rebuild();
@@ -84,10 +95,31 @@ admin_head('Ajustes del sitio', 'ajustes', $user);
 
 <div class="card">
   <h2>Contacto</h2>
-  <p class="hint">Aparece en el pie de página del sitio.</p>
+  <p class="hint">Aparece en el panel de contacto de «Solicitar servicio» y en el pie de página. Deja vacío lo que no quieras mostrar.</p>
   <div class="grid2">
     <div class="f"><label for="s_email">Correo de contacto</label><input id="s_email" name="email" type="email" maxlength="150" value="<?= e($a['email']) ?>"><span class="err" data-err="email"></span></div>
     <div class="f"><label for="s_tel">Teléfono</label><input id="s_tel" name="telefono" type="tel" maxlength="40" value="<?= e($a['telefono']) ?>"><span class="err" data-err="telefono"></span></div>
+    <div class="f"><label for="s_dir">Dirección</label><input id="s_dir" name="direccion" maxlength="200" value="<?= e($a['direccion']) ?>"></div>
+    <div class="f"><label for="s_hor">Horario</label><input id="s_hor" name="horario" maxlength="120" value="<?= e($a['horario']) ?>" placeholder="Ej. Lunes a viernes, 9:00 a 18:00 h"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>WhatsApp</h2>
+  <p class="hint">Muestra un botón flotante de WhatsApp en todo el sitio y otro en el panel de contacto. Déjalo vacío para ocultarlos.</p>
+  <div class="grid2">
+    <div class="f"><label for="s_wa">Número (con código de país)</label><input id="s_wa" name="whatsapp" inputmode="numeric" maxlength="30" value="<?= e($a['whatsapp']) ?>" placeholder="Ej. 5215512345678"><span class="hint">México: 52 + 1 + los 10 dígitos.</span><span class="err" data-err="whatsapp"></span></div>
+    <div class="f"><label for="s_wam">Mensaje inicial</label><input id="s_wam" name="whatsapp_msg" maxlength="200" value="<?= e($a['whatsapp_msg']) ?>"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Redes sociales</h2>
+  <p class="hint">Pega el enlace completo de cada perfil (que empiece con https://). Solo se muestran las que tengan enlace.</p>
+  <div class="grid2">
+<?php foreach (redes_sociales() as $k => [$nombreRed]): ?>
+    <div class="f"><label for="s_<?= e($k) ?>"><?= e($nombreRed) ?></label><input id="s_<?= e($k) ?>" name="<?= e($k) ?>" type="url" maxlength="255" value="<?= e($a[$k]) ?>" placeholder="https://"><span class="err" data-err="<?= e($k) ?>"></span></div>
+<?php endforeach; ?>
   </div>
 </div>
 

@@ -5,8 +5,30 @@
    ========================================================= */
 
 @media (max-width: 960px) {
-    .g3 {
+    .g3,
+    .g4 {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat:nth-child(odd) {
+        border-left: 0;
+    }
+
+    .stat:nth-child(n + 3) {
+        border-top: 1px solid var(--line);
+    }
+
+    .blk.has-img {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .blk.img-left .blk-img {
+        order: 0;
     }
 
     .split {
@@ -22,7 +44,8 @@
         position: static;
     }
 
-    .fgrid {
+    .fgrid,
+    .fgrid:has(> :nth-child(4)) {
         grid-template-columns: 1fr 1fr;
     }
 
@@ -90,8 +113,17 @@
         display: none;
     }
 
-    .g3 {
+    .g2,
+    .g3,
+    .g4 {
         grid-template-columns: 1fr;
+    }
+
+    .wa {
+        width: 54px;
+        height: 54px;
+        right: 16px;
+        bottom: 16px;
     }
 
     form {
@@ -99,7 +131,8 @@
         padding: 22px;
     }
 
-    .fgrid {
+    .fgrid,
+    .fgrid:has(> :nth-child(4)) {
         grid-template-columns: 1fr;
     }
 }
@@ -166,6 +199,11 @@
 
     .dots {
         bottom: 28px;
+    }
+
+    /* Aquí el carrusel termina en flechas y puntos: las cifras no se enciman */
+    .stats {
+        margin-top: 28px;
     }
 }
 

@@ -846,3 +846,190 @@ body.auth {
 .muted {
     color: var(--ink2);
 }
+
+/* ---- listas genéricas (cifras, puntos, testimonios, preguntas, secciones) ---- */
+.row.no-media {
+    grid-template-columns: auto 1fr auto;
+}
+.row .meta label.sel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--ink2);
+}
+.row .meta label.sel select {
+    width: auto;
+}
+form[data-action] {
+    display: grid;
+    gap: 14px;
+}
+@media (max-width: 760px) {
+    .row.no-media {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Aviso del inicio cuando algo grave falla en el servidor */
+.card.alerta {
+    border-left: 4px solid #d9443a;
+}
+.card.alerta h2 {
+    color: #d9443a;
+}
+
+/* ---- Inicio: resumen tipo dashboard ---- */
+.stat .trend {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink2);
+}
+.stat .trend.up {
+    color: var(--ok);
+}
+.stat .trend.down {
+    color: var(--danger);
+}
+.dash-h {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.dash-h h2 {
+    margin: 0;
+}
+/* Botones "Por semana / Por mes" */
+.seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.seg button {
+    border: 0;
+    background: var(--card);
+    color: var(--ink2);
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 7px 14px;
+    cursor: pointer;
+}
+.seg button + button {
+    border-left: 1px solid var(--line);
+}
+.seg button.on {
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+/* Gráfica de barras (SVG) */
+.chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+.chart .grid {
+    stroke: var(--line);
+    stroke-dasharray: 4 4;
+}
+.chart .axis {
+    stroke: var(--line);
+}
+.chart .bar {
+    fill: var(--accent);
+    opacity: 0.55;
+    transition: opacity 0.2s;
+}
+.chart .bar.now,
+.chart g:hover .bar {
+    opacity: 1;
+}
+.chart text {
+    font: 600 12px/1 system-ui, sans-serif;
+    text-anchor: middle;
+}
+.chart .val {
+    fill: var(--ink);
+}
+.chart .lbl {
+    fill: var(--ink2);
+    font-weight: 500;
+    font-size: 11px;
+}
+.dash .hint {
+    margin: 6px 0 0;
+}
+.dash-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+/* Barras horizontales (ranking y estados) */
+.hbars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+.hbars li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+.hb-l {
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.hb-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.hb-bg {
+    fill: var(--bg);
+}
+.hb-fill {
+    fill: var(--accent);
+}
+.hbars b {
+    min-width: 2ch;
+    text-align: right;
+}
+.hbars .st-vista .hb-fill {
+    fill: var(--warn);
+}
+.hbars .st-atendida .hb-fill {
+    fill: var(--ok);
+}
+.hbars .st-archivada .hb-fill {
+    fill: var(--ink2);
+}
+@media (max-width: 960px) {
+    .dash-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+/* En celular la gráfica se encoge: letras más grandes para que se lean */
+@media (max-width: 760px) {
+    .chart .val {
+        font-size: 22px;
+    }
+    .chart .lbl {
+        font-size: 19px;
+    }
+    .chart .lbl.alt {
+        display: none;
+    }
+}

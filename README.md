@@ -14,7 +14,7 @@ administración en `/admin/`. PHP 8 + PDO, JavaScript vanilla, sin librerías ni
 | Servidor | Apache con `.htaccess` habilitado (`AllowOverride All`). Recomendados: `mod_rewrite`, `mod_headers`, `mod_deflate`, `mod_expires` |
 | Entorno local | XAMPP, WAMP o Laragon (todos incluyen lo anterior) |
 
-El panel del admin (**Inicio → Estado del sistema**) te indica si falta GD, WebP o permisos de escritura.
+El **estado del sistema** (si falta GD, WebP, HTTPS o permisos de escritura) no se muestra al dueño del sitio: se consulta abriendo `/admin/?estado` con la sesión iniciada. Si algo grave falla, el inicio del panel muestra un aviso sencillo para que contacte a quien administra el sitio.
 
 ---
 
@@ -26,6 +26,10 @@ El panel del admin (**Inicio → Estado del sistema**) te indica si falta GD, We
    pestaña **Bases de datos** → nombre `zarmex` → cotejamiento **`utf8mb4_unicode_ci`** → *Crear*.
 4. **Importa el SQL**: selecciona la base `zarmex` en el panel izquierdo → pestaña **Importar** →
    elige `database/schema.sql` → *Importar*. Repite con `database/seed.sql` (una sola vez).
+   > **¿Ya tenías el sitio instalado de antes?** No vuelvas a importar `schema.sql` ni `seed.sql`: importa solo
+   > `database/actualizacion-secciones.sql`. Crea las tablas de las secciones nuevas (cifras, «¿Por qué elegirnos?»,
+   > testimonios, preguntas frecuentes, secciones extra) y los ajustes nuevos sin tocar lo que ya tienes. Se puede
+   > importar más de una vez sin duplicar nada.
 5. **Credenciales** (opcional en local): XAMPP/WAMP/Laragon usan por defecto usuario `root` sin contraseña,
    que ya es el valor por defecto del proyecto. Si las tuyas son otras, copia `.env.example` como `.env` y edítalo.
    Pon `APP_ENV=development` mientras desarrollas para ver errores en pantalla.
@@ -70,9 +74,17 @@ El botón «Solicitar» de cada tarjeta abre el formulario con ese servicio ya e
 **Formulario.** Validación en cliente y en servidor, token CSRF, campo trampa anti-spam (honeypot) y límite de 5 envíos
 por IP por hora. Se guarda en `solicitudes`; el select se llena desde la BD.
 
-**Panel (`/admin/`).** Inicio (contadores), Carrusel, Servicios y productos, Nosotros (imágenes, valores, historia),
-Ajustes del sitio (nombre, logo, contacto, textos, footer y colores), Solicitudes (filtro, búsqueda, detalle, estado,
+**Panel (`/admin/`).** Inicio (resumen del negocio: solicitudes de este mes comparadas con el anterior, de la semana, pendientes y totales; gráfica por semana o por mes; lo más solicitado y el estado de las solicitudes; se calcula con la tabla `solicitudes` en `includes/dashboard.php`), Carrusel, Servicios y productos, Página de inicio (cifras y «¿Por qué
+elegirnos?»), Testimonios, Preguntas frecuentes, Nosotros (imágenes, eslogan, misión, visión, valores, historia),
+Secciones extra (bloques libres con imagen en Inicio o Nosotros), Ajustes del sitio (nombre, logo, contacto con dirección
+y horario, WhatsApp, redes sociales, textos, footer y colores), Solicitudes (filtro, búsqueda, detalle, estado,
 eliminar, CSV) y Usuarios (solo administradores). Todo por fetch/JSON, con vista previa de imágenes y avisos.
+Las listas nuevas (cifras, puntos, testimonios, preguntas y secciones) comparten un mismo módulo, `includes/listas.php`:
+se agregan, editan, ocultan, reordenan (⠿ o flechas) y eliminan igual que los valores. Si una lista queda vacía o con
+todo oculto, su sección no aparece en el sitio.
+
+**Al compartir el enlace.** El título y la descripción salen del nombre de la empresa y del eslogan; la imagen es la del
+primer slide (o `img/compartir.png` si no tiene). Sin logo, el ícono de la pestaña es la inicial de la empresa.
 
 **Roles.** `admin`: todo. `editor`: contenido y solicitudes (sin Usuarios).
 
@@ -121,7 +133,7 @@ El `.env` real **nunca** debe subirse a un repositorio (ya está en `.gitignore`
       contraseña del usuario del seed y su correo) y elimina `admin@ejemplo.com`.
 - [ ] **HTTPS**: activa el certificado SSL (Let's Encrypt en cPanel) y descomenta el bloque *HTTPS* del `.htaccess`.
       Con HTTPS, la cookie de sesión se marca `Secure` automáticamente y se envía HSTS.
-- [ ] **Errores desactivados**: `APP_ENV=production`. Verifica en *Inicio → Estado del sistema* que todo esté en ✔.
+- [ ] **Errores desactivados**: `APP_ENV=production`. Verifica en `/admin/?estado` que todo esté en ✔.
 - [ ] **PHP**: versión 8.0+ y extensiones `gd`, `fileinfo`, `pdo_mysql` activas (cPanel → *Select PHP Version*).
 - [ ] **Límites de subida**: `.htaccess` y `.user.ini` piden 4 MB; si tu hosting los ignora, sube `upload_max_filesize`/`post_max_size` en su panel.
 - [ ] **Bloqueos**: comprueba que estas URLs den **403/404**: `/includes/config.php`, `/database/schema.sql`, `/cache/content.json`, `/.env`.
@@ -168,9 +180,14 @@ errores sin detalles en producción (log en `logs/php-error.log`) · el CSV expo
 
 **Rediseño posterior** (estilo del sitio estático `pruebazarmex`): se reescribieron `css/variables.css`, `base.css`,
 `layout.css`, `components.css` y `responsive.css`, `index.php`, `includes/render.php` y partes de `js/app.js`; se
-añadieron `js/tema-inicial.js` y `fonts/`. Del rediseño estático **no** se trajeron las secciones que necesitarían
-tablas nuevas en la BD y pantallas nuevas en el panel: cifras, «¿Por qué elegirnos?», misión/visión, testimonios,
-preguntas frecuentes, redes sociales, botón de WhatsApp y secciones extra.
+añadieron `js/tema-inicial.js` y `fonts/`.
+
+**Secciones del rediseño** (segunda parte): cifras, «¿Por qué elegirnos?», misión/visión, testimonios, preguntas
+frecuentes, redes sociales, botón de WhatsApp y secciones extra, todas editables desde el panel. Tablas nuevas `cifras`,
+`puntos`, `testimonios`, `preguntas` y `secciones`, y ajustes nuevos (`eslogan`, `direccion`, `horario`, `whatsapp`,
+`whatsapp_msg`, `mision`, `vision`, `red_*`). Archivos nuevos: `includes/listas.php`, `admin/pagina-inicio.php`,
+`admin/testimonios.php`, `admin/preguntas.php`, `admin/secciones.php`, `database/actualizacion-secciones.sql`,
+`img/compartir.png` y las carpetas `uploads/testimonios/` y `uploads/secciones/`.
 
 **Eliminado:** el diálogo de admin embebido, el PIN `1234`, el enlace «⚙ Admin», `localStorage` y las imágenes en base64.
 

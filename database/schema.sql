@@ -143,4 +143,75 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ---------------------------------------------------------------------
+-- Cifras de Inicio (debajo del carrusel: "+10 años de experiencia", etc.)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS cifras (
+  id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  numero VARCHAR(20) NOT NULL,
+  texto  VARCHAR(80) NOT NULL DEFAULT '',
+  orden  INT NOT NULL DEFAULT 0,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_cifras_activo_orden (activo, orden)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- "¿Por qué elegirnos?" en Inicio (tarjetas con ícono)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS puntos (
+  id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  titulo VARCHAR(80)  NOT NULL,
+  texto  VARCHAR(255) NOT NULL DEFAULT '',
+  icono  VARCHAR(30)  NOT NULL DEFAULT 'check',
+  orden  INT NOT NULL DEFAULT 0,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_puntos_activo_orden (activo, orden)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Testimonios de clientes (Inicio)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS testimonios (
+  id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  cargo  VARCHAR(120) NOT NULL DEFAULT '',
+  texto  VARCHAR(600) NOT NULL DEFAULT '',
+  imagen VARCHAR(255) NULL DEFAULT NULL,
+  orden  INT NOT NULL DEFAULT 0,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_testimonios_activo_orden (activo, orden)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Preguntas frecuentes (Inicio)
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS preguntas (
+  id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  pregunta  VARCHAR(255) NOT NULL,
+  respuesta TEXT NOT NULL,
+  orden     INT NOT NULL DEFAULT 0,
+  activo    TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_preguntas_activo_orden (activo, orden)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Secciones libres (título, texto e imagen opcional) en Inicio o Nosotros
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS secciones (
+  id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  pagina ENUM('inicio','nosotros') NOT NULL DEFAULT 'inicio',
+  titulo VARCHAR(150) NOT NULL DEFAULT '',
+  texto  TEXT NOT NULL,
+  imagen VARCHAR(255) NULL DEFAULT NULL,
+  lado   ENUM('derecha','izquierda') NOT NULL DEFAULT 'derecha',
+  orden  INT NOT NULL DEFAULT 0,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_secciones_pagina (pagina, activo, orden)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;

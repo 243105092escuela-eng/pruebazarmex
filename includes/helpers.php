@@ -185,7 +185,7 @@ function truncate(string $s, int $n): string
 /* ------------------------------------------------------------------ */
 /*  Orden de filas (slides, items, valores)                           */
 /* ------------------------------------------------------------------ */
-const TABLAS_ORDENABLES = ['slides', 'items', 'valores'];
+const TABLAS_ORDENABLES = ['slides', 'items', 'valores', 'cifras', 'puntos', 'testimonios', 'preguntas', 'secciones'];
 
 function next_orden(string $table): int
 {

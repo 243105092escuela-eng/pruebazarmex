@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 class UploadError extends RuntimeException {}
 
-const IMG_CARPETAS = ['carrusel', 'servicios', 'nosotros', 'ajustes'];
+const IMG_CARPETAS = ['carrusel', 'servicios', 'nosotros', 'ajustes', 'testimonios', 'secciones'];
 
 function upload_present(string $field): bool
 {
@@ -16,7 +16,7 @@ function upload_present(string $field): bool
 }
 
 /**
- * @param string $folder  carrusel|servicios|nosotros|ajustes
+ * @param string $folder  carrusel|servicios|nosotros|ajustes|testimonios|secciones
  * @param int    $maxW    ancho máximo (1600 carrusel/nosotros, 800 tarjetas)
  * @param bool   $alpha   conservar transparencia (logo): guarda PNG en lugar de JPG
  * @return string ruta relativa (p. ej. uploads/servicios/ab12….jpg)

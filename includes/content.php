@@ -16,6 +16,11 @@ function ajustes_defaults(): array
         'email' => '', 'telefono' => '',
         'texto_home' => '', 'texto_servicios' => '', 'texto_footer' => 'Todos los derechos reservados.',
         'color_acento' => '', 'color_acento_texto' => '',
+        'eslogan' => '', 'direccion' => '', 'horario' => '',
+        'whatsapp' => '', 'whatsapp_msg' => '',
+        'mision' => '', 'vision' => '',
+        'red_facebook' => '', 'red_instagram' => '', 'red_tiktok' => '',
+        'red_linkedin' => '', 'red_youtube' => '', 'red_x' => '',
     ];
 }
 
@@ -58,6 +63,17 @@ function content_build(): array
     $valores = $pdo->query('SELECT id, titulo, texto, icono FROM valores WHERE activo = 1 ORDER BY orden, id')->fetchAll();
     foreach ($valores as &$v) { $v['id'] = (int)$v['id']; } unset($v);
 
+    $cifras = $pdo->query('SELECT id, numero, texto FROM cifras WHERE activo = 1 ORDER BY orden, id')->fetchAll();
+    $puntos = $pdo->query('SELECT id, titulo, texto, icono FROM puntos WHERE activo = 1 ORDER BY orden, id')->fetchAll();
+    $testimonios = $pdo->query('SELECT id, nombre, cargo, texto, imagen FROM testimonios WHERE activo = 1 ORDER BY orden, id')->fetchAll();
+    foreach ($testimonios as &$t) { $t['webp'] = webp_sibling($t['imagen']); } unset($t);
+    $preguntas = $pdo->query('SELECT id, pregunta, respuesta FROM preguntas WHERE activo = 1 ORDER BY orden, id')->fetchAll();
+    $secciones = ['inicio' => [], 'nosotros' => []];
+    foreach ($pdo->query('SELECT id, pagina, titulo, texto, imagen, lado FROM secciones WHERE activo = 1 ORDER BY orden, id')->fetchAll() as $s) {
+        $s['webp'] = webp_sibling($s['imagen']);
+        $secciones[$s['pagina']][] = $s;
+    }
+
     $data = [
         'ajustes'  => $aj,
         'slides'   => $slides,
@@ -67,6 +83,13 @@ function content_build(): array
             'valores'  => $valores,
             'historia' => array_values(array_filter([$aj['historia_p1'], $aj['historia_p2']], 'strlen')),
         ],
+        'inicio'   => [
+            'cifras'      => $cifras,
+            'puntos'      => $puntos,
+            'testimonios' => $testimonios,
+            'preguntas'   => $preguntas,
+        ],
+        'secciones' => $secciones,
     ];
     $data['version'] = substr(md5(json_encode($data, JSON_UNESCAPED_UNICODE)), 0, 12);
     return $data;
