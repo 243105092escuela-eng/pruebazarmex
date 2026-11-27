@@ -81,16 +81,16 @@ function csv_safe(mixed $v): string
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['export'] ?? '') === 'csv') {
     $f = sol_filters($_GET);
     [$where, $params] = sol_where($f);
-    $st = db()->prepare("SELECT id, creado_en, nombre, email, telefono, empresa, item_nombre, plazo, cantidad, descripcion, estado, ip FROM solicitudes $where ORDER BY creado_en DESC, id DESC");
+    $st = db()->prepare("SELECT id, creado_en, nombre, email, telefono, empresa, item_nombre, plazo, cantidad, descripcion, estado FROM solicitudes $where ORDER BY creado_en DESC, id DESC");
     $st->execute($params);
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="solicitudes-' . date('Ymd-His') . '.csv"');
     header('Cache-Control: no-store');
     $out = fopen('php://output', 'w');
     fwrite($out, "\xEF\xBB\xBF"); // BOM para que Excel respete los acentos
-    fputcsv($out, ['ID', 'Fecha', 'Nombre', 'Correo', 'Teléfono', 'Empresa', 'Servicio o producto', 'Plazo', 'Cantidad', 'Descripción', 'Estado', 'IP'], ',', '"', '\\');
+    fputcsv($out, ['ID', 'Fecha', 'Nombre', 'Correo', 'Teléfono', 'Empresa', 'Servicio o producto', 'Plazo', 'Cantidad', 'Descripción', 'Estado'], ',', '"', '\\');
     while ($r = $st->fetch()) {
-        fputcsv($out, array_map('csv_safe', [$r['id'], $r['creado_en'], $r['nombre'], $r['email'], $r['telefono'], $r['empresa'], $r['item_nombre'], $r['plazo'], $r['cantidad'], $r['descripcion'], $r['estado'], $r['ip']]), ',', '"', '\\');
+        fputcsv($out, array_map('csv_safe', [$r['id'], $r['creado_en'], $r['nombre'], $r['email'], $r['telefono'], $r['empresa'], $r['item_nombre'], $r['plazo'], $r['cantidad'], $r['descripcion'], $r['estado']]), ',', '"', '\\');
     }
     fclose($out);
     exit;
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'ver':
             $id = post_int('id');
-            $st = $pdo->prepare('SELECT id, nombre, email, telefono, empresa, item_nombre, plazo, cantidad, descripcion, estado, ip, creado_en FROM solicitudes WHERE id = ?');
+            $st = $pdo->prepare('SELECT id, nombre, email, telefono, empresa, item_nombre, plazo, cantidad, descripcion, estado, creado_en FROM solicitudes WHERE id = ?');
             $st->execute([$id]);
             $r = $st->fetch();
             if (!$r) { json_fail('La solicitud ya no existe.', 404); }
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rows = [
                 'Fecha' => fmt_date($r['creado_en']), 'Nombre' => $r['nombre'], 'Correo' => null, 'Teléfono' => null,
                 'Empresa' => (string)$r['empresa'], 'Servicio o producto' => (string)$r['item_nombre'], 'Plazo' => $r['plazo'],
-                'Cantidad' => $r['cantidad'] !== null ? (string)$r['cantidad'] : '', 'Estado' => ucfirst($r['estado']), 'IP' => $r['ip'],
+                'Cantidad' => $r['cantidad'] !== null ? (string)$r['cantidad'] : '', 'Estado' => ucfirst($r['estado']),
             ];
             $h = '<dl class="dl">';
             foreach ($rows as $k => $v) {

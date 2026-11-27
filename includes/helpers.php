@@ -27,6 +27,22 @@ function client_ip(): string
     return substr((string)$ip, 0, 45);
 }
 
+/**
+ * Privacidad: la IP de las solicitudes solo sirve para el límite de envíos por hora,
+ * así que se borra pasados IP_RETENCION_DIAS. Los intentos de login fallidos (IP y correo)
+ * solo importan 15 minutos: se eliminan pasado un día. Se llama al recibir una solicitud
+ * y al abrir el inicio del panel, así no hace falta una tarea programada en el hosting.
+ */
+function purgar_ips_viejas(PDO $pdo): void
+{
+    try {
+        $pdo->exec("UPDATE solicitudes SET ip = '' WHERE ip <> '' AND creado_en < DATE_SUB(NOW(), INTERVAL " . (int)IP_RETENCION_DIAS . ' DAY)');
+        $pdo->exec('DELETE FROM intentos_login WHERE creado_en < DATE_SUB(NOW(), INTERVAL 1 DAY)');
+    } catch (Throwable $t) {
+        error_log('purgar_ips_viejas: ' . $t->getMessage()); // no debe impedir guardar la solicitud
+    }
+}
+
 function is_ajax(): bool
 {
     return ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';

@@ -9,6 +9,7 @@ require __DIR__ . '/../includes/dashboard.php';
 
 $user = require_login();
 $pdo  = db();
+purgar_ips_viejas($pdo);
 
 $n = $pdo->query(
     "SELECT

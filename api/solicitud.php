@@ -79,6 +79,8 @@ if ($err) {
     json_fail('Revisa los campos marcados.', 422, ['errors' => $err]);
 }
 
+purgar_ips_viejas($pdo);
+
 $pdo->prepare(
     'INSERT INTO solicitudes (nombre, email, telefono, empresa, item_id, item_nombre, plazo, cantidad, descripcion, ip)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'

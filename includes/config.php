@@ -18,6 +18,7 @@ const LOGIN_MAX_INTENTOS   = 5;                 // fallos permitidos...
 const LOGIN_VENTANA_SEG    = 900;               // ...en 15 min; luego se bloquea ese tiempo
 const SESSION_IDLE_SEG     = 7200;              // 2 h de inactividad
 const SOLICITUD_MAX_HORA   = 5;                 // envíos por IP y hora
+const IP_RETENCION_DIAS    = 30;                // la IP de una solicitud se borra pasado este tiempo
 const PAGINA_ADMIN         = 10;
 const SESSION_NAME         = 'ZARMEXSID';
 

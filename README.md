@@ -73,6 +73,9 @@ El botón «Solicitar» de cada tarjeta abre el formulario con ese servicio ya e
 
 **Formulario.** Validación en cliente y en servidor, token CSRF, campo trampa anti-spam (honeypot) y límite de 5 envíos
 por IP por hora. Se guarda en `solicitudes`; el select se llena desde la BD.
+**Privacidad:** la IP solo se usa para ese límite; no se muestra en el panel ni en el CSV y se borra sola a los
+`IP_RETENCION_DIAS` (30) días, al llegar una solicitud o al abrir el inicio del panel. Los intentos de login fallidos se
+eliminan pasado un día.
 
 **Panel (`/admin/`).** Inicio (resumen del negocio: solicitudes de este mes comparadas con el anterior, de la semana, pendientes y totales; gráfica por semana o por mes; lo más solicitado y el estado de las solicitudes; se calcula con la tabla `solicitudes` en `includes/dashboard.php`), Carrusel, Servicios y productos, Página de inicio (cifras y «¿Por qué
 elegirnos?»), Testimonios, Preguntas frecuentes, Nosotros (imágenes, eslogan, misión, visión, valores, historia),
